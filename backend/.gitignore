@@ -1,0 +1,31 @@
+# Build output
+/build/
+/target/
+/bin/
+
+# Gradle files
+/.gradle/
+/out/
+/.gradle/
+/build/
+
+# Application files
+.env
+*.properties
+*.yml
+
+# Logs
+*.log
+logs/
+/log/
+
+# IDE files
+.vscode/
+.idea/
+*.iml
+/.settings/
+
+# Specific OS files
+.DS_Store
+Thumbs.db
+

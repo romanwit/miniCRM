@@ -1,0 +1,65 @@
+plugins {
+    id 'org.springframework.boot' version '3.0.0'
+    id 'io.spring.dependency-management' version '1.1.0'
+    id 'java'
+}
+
+group = 'com.example'
+version = '1.0.0'
+sourceCompatibility = '17'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.postgresql:postgresql'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'jakarta.validation:jakarta.validation-api'
+    implementation 'org.hibernate.validator:hibernate-validator'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    implementation 'org.flywaydb:flyway-core'
+    
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'com.h2database:h2'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+task runAll {
+    dependsOn ':frontend:buildFrontend'
+
+    doLast {
+        def backendCommand = "gradle :backend:bootRun"
+        def frontendCommand = "npm run dev --prefix frontend"
+
+        if (System.properties['os.name'].toLowerCase().contains('windows')) {
+            backendCommand = "cmd /c gradlew.bat :backend:bootRun"
+            frontendCommand = "cmd /c npm run dev --prefix frontend"
+        }
+
+        println "Running backend command: ${backendCommand}"
+        println "Running frontend command: ${frontendCommand}"
+
+        def backendProcess = backendCommand.execute();//null, new File(projectDir))
+        def frontendProcess = frontendCommand.execute();//null, new File(projectDir))
+
+        backendProcess.consumeProcessOutput(System.out, System.err)
+        frontendProcess.consumeProcessOutput(System.out, System.err)
+
+        backendProcess.waitFor()
+        frontendProcess.waitFor()
+    }
+}
+
+
+

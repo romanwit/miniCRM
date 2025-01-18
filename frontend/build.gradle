@@ -1,0 +1,35 @@
+plugins {
+    id 'com.github.node-gradle.node' version '3.5.0'
+}
+
+node {
+    version = '16.20.0' 
+    npmVersion = '8.5.5'
+    download = true
+    workDir = file("${projectDir}/.gradle/node") 
+    nodeModulesDir = file("${projectDir}") 
+
+task buildFrontend(type: NpmTask) {
+    description = 'frontend assembly'
+    group = 'build'
+    args = ['run', 'build']
+}
+
+task cleanFrontend(type: Delete) {
+    delete file("${projectDir}/dist") // For Vite: dist, For React: build
+}
+
+task startFrontend(type: NpmTask) {
+    description = 'frontend run'
+    group = 'run'
+    args = ['run', 'dev']
+}
+
+tasks.register('build') {
+    dependsOn buildFrontend
+}
+
+tasks.register('clean') {
+    dependsOn cleanFrontend
+}
+

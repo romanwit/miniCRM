@@ -1,0 +1,29 @@
+# Gradle and Java
+/.gradle/
+/build/
+/bin/
+
+# Node.js modules (common for frontend)
+/node_modules/
+
+# Logs
+*.log
+logs/
+/log/
+
+# IDE/Editor settings
+.vscode/
+.idea/
+*.iml
+*.swp
+/.settings/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore dependency lock files
+**/yarn.lock
+**/package-lock.json
+**/pnpm-lock.yaml
+
