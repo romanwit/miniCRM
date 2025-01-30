@@ -76,7 +76,7 @@ const handleClientAdded = async (newClient: Client) => {
       }
 
       const savedClient = await response.json(); 
-      //onClientAdded(savedClient); 
+      //TODO: reload ClientsList UI
     } catch (error) {
       console.error('Error adding client:', error);
       alert('Error adding client. Please try again.');
