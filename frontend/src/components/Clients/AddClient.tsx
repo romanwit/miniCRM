@@ -4,14 +4,6 @@ interface AddClientProps {
   onClientAdded: (client: Client) => void;
 }
 
-interface Client {
-  id: number;
-  name: string;
-  registrationDate: string;
-  email: string;
-  phone: string;
-}
-
 const AddClient: React.FC<AddClientProps> = ({ onClientAdded }) => {
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
@@ -19,7 +11,10 @@ const AddClient: React.FC<AddClientProps> = ({ onClientAdded }) => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const newClient: Client = { id: Date.now(), name, registrationDate: new Date().toISOString(), email, phone };
+    const newClient: Client = {
+      id: Date.now(), name, registrationDate: new Date().toISOString(), email, phone,
+      properties: []
+    };
     onClientAdded(newClient);
   };
 
