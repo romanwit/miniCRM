@@ -8,6 +8,7 @@ node {
     download = true
     workDir = file("${projectDir}/.gradle/node") 
     nodeModulesDir = file("${projectDir}") 
+}
 
 task buildFrontend(type: NpmTask) {
     description = 'frontend assembly'
