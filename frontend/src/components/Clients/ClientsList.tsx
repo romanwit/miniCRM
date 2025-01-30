@@ -1,13 +1,5 @@
 import React, { useState, useEffect } from 'react';
 
-interface Client {
-  id: number;
-  name: string;
-  registrationDate: string; // TODO: change type to date
-  email: string;
-  phone: string;
-}
-
 const ClientsList: React.FC = () => {
   const [clients, setClients] = useState<Client[]>([]);
 
