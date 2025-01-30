@@ -60,18 +60,7 @@ const handleRegister = async (username: string, password: string, email: string)
   }
 };
 
-interface Client {
-  id: number;
-  name: string;
-  registrationDate: string;
-  email: string;
-  phone: string;
-  //properties: Property[];
-}
-
 const handleClientAdded = async (newClient: Client) => {
-  
-    //{ name, email, phone } = newClient;
 
     try {
       const response = await fetch('/api/clients', {

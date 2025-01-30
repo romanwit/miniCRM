@@ -1,21 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
-interface Client {
-  id: number;
-  name: string;
-  registrationDate: string;
-  email: string;
-  phone: string;
-  properties: Property[];
-}
-
-interface Property {
-  id: number;
-  type: string;
-  value: string;
-}
-
 interface EditClientProps {
   onClientUpdated: (client: Client) => void;
 }
