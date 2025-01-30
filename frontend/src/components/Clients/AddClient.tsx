@@ -20,7 +20,6 @@ const AddClient: React.FC<AddClientProps> = ({ onClientAdded }) => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const newClient: Client = { id: Date.now(), name, registrationDate: new Date().toISOString(), email, phone };
-    // TODO: here call of API fetch to add new client
     onClientAdded(newClient);
   };
 

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 
 interface Client {
   id: number;
@@ -16,35 +17,65 @@ interface Property {
 }
 
 interface EditClientProps {
-  clientId: number;
   onClientUpdated: (client: Client) => void;
 }
 
-const EditClient: React.FC<EditClientProps> = ({ clientId, onClientUpdated }) => {
+const EditClient: React.FC<EditClientProps> = ({ onClientUpdated }) => {
+
+  const { id } = useParams<{ id: string }>();
+  const clientId = Number(id);
+
   const [client, setClient] = useState<Client | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchClient = async () => {
-      const response = await fetch(`/api/clients/${clientId}`);
-      const data: Client = await response.json();
-      setClient(data);
+      try {
+        const response = await fetch(`/api/clients/${clientId}`);
+        if (!response.ok) throw new Error('Failed to fetch client data');
+        const data: Client = await response.json();
+        setClient(data);
+      } catch (err) {
+        setError((err as Error).message);
+      } finally {
+        setLoading(false);
+      }
     };
     fetchClient();
   }, [clientId]);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>, propertyId: number) => {
-    // TODO: add handling of changing client here 
+  const handlePropertyChange = (event: React.ChangeEvent<HTMLInputElement>, propertyId: number) => {
+    if (!client) return;
+    const updatedProperties = client.properties.map((prop) =>
+      prop.id === propertyId ? { ...prop, value: event.target.value } : prop
+    );
+    setClient({ ...client, properties: updatedProperties });
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (client) {
-      // TODO: add here API fetch call to change client
-      onClientUpdated(client);
+    if (!client) return;
+
+    try {
+      const response = await fetch(`/api/clients/${clientId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(client),
+      });
+
+      if (!response.ok) throw new Error('Failed to update client');
+
+      const updatedClient: Client = await response.json();
+      onClientUpdated(updatedClient);
+    } catch (err) {
+      setError((err as Error).message);
     }
   };
 
-  if (!client) return <div>Loading...</div>;
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+  if (!client) return <div>Client not found</div>;
 
   return (
     <form onSubmit={handleSubmit}>
@@ -60,11 +91,16 @@ const EditClient: React.FC<EditClientProps> = ({ clientId, onClientUpdated }) =>
         <label>Phone</label>
         <input type="tel" value={client.phone} onChange={(e) => setClient({ ...client, phone: e.target.value })} />
       </div>
-      {/* Дополнительные поля для редактирования свойств клиента */}
+      <h3>Properties</h3>
+      {client.properties.map((prop) => (
+        <div key={prop.id}>
+          <label>{prop.type}</label>
+          <input type="text" value={prop.value} onChange={(e) => handlePropertyChange(e, prop.id)} />
+        </div>
+      ))}
       <button type="submit">Update Client</button>
     </form>
   );
 };
 
 export default EditClient;
-
