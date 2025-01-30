@@ -52,17 +52,27 @@ public class SecurityConfig {
             .csrf().disable() 
             .authorizeHttpRequests(authz -> authz
             	.requestMatchers("/actuator/health").permitAll()
+            	.requestMatchers("/", "/login", "/static/**").permitAll()
+            	.requestMatchers("/api/login").permitAll() 
+            	.requestMatchers("/api/auth/login").permitAll() 
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/user/**").hasRole("USER")
                 .anyRequest().authenticated()
             )
-            .formLogin(login -> login
-                .loginPage("/login")
-                .permitAll()
-            )
+            /*.formLogin(login -> login
+                    .loginPage("/login") 
+                    .permitAll()
+                )*/
+            .formLogin().disable()
+            /*.formLogin(login -> login
+                    .loginProcessingUrl("/api/login") 
+                    .permitAll()
+                )*/
             .logout(logout -> logout
-                .permitAll()
-            );
+                    .logoutUrl("/api/logout")
+                    .permitAll()
+                );
+
 
         return http.build();
     }
