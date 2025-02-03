@@ -5,7 +5,7 @@ allprojects {
 }
 
 subprojects {
-    group = 'com.example'
+    group = 'com.romanwit'
     version = '0.0.1-SNAPSHOT'
 }
 
