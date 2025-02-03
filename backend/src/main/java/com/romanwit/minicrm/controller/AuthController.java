@@ -15,10 +15,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 @RestController
 @RequestMapping("/api/auth")
 @CrossOrigin(origins = "*")
 public class AuthController {
+	
+	private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(AuthController.class); 
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -32,7 +40,10 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         try {
-            Authentication authentication = authenticationManager.authenticate(
+        	
+        	logger.info("Attempting to authenticate user: " + loginRequest.getUsername());  
+        	
+        	Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                     loginRequest.getUsername(),
                     loginRequest.getPassword()
@@ -41,14 +52,16 @@ public class AuthController {
 
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             String token = jwtTokenProvider.generateToken(userDetails);
-
             return ResponseEntity.ok(new AuthResponse(token));
 
         } catch (BadCredentialsException e) {
+        	 logger.info("Bad credentials"); 
+
             return ResponseEntity.status(401).body("Invalid username or password");
         } catch (DisabledException e) {
             return ResponseEntity.status(403).body("User account is disabled");
         } catch (Exception e) {
+        	logger.error("Authentication failed due to an exception", e);
             return ResponseEntity.status(500).body("Authentication failed");
         }
     }
