@@ -10,13 +10,16 @@ const LoginPage: React.FC<LoginProps> = ({ onLogin }) => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const navigate = useNavigate();
+  const inputRef = useRef<HTMLInputElement>(null); 
 
   const isTokenValid = (token: string): boolean => {
+    console.log("checking token validity");
     try {
       const decoded: any = jwtDecode(token);
       const now = Date.now() / 1000; 
       return decoded.exp && decoded.exp > now; 
     } catch (error) {
+      console.log("token is expired");
       return false; 
     }
   };
