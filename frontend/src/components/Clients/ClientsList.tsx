@@ -5,7 +5,7 @@ const ClientsList: React.FC = () => {
 
   useEffect(() => {
     const fetchClients = async () => {
-      const token = localStorage.getItem("jwtToken") || "";
+      const token = localStorage.getItem("auth_token_xyz") || "";
       try {
         const response = await fetch('http://localhost:8080/api/customers', 
           {
