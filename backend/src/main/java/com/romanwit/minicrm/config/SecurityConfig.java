@@ -29,7 +29,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
 	
-	private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(AuthController.class); 
+	private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(SecurityConfig.class); 
 	
 	//private final UserRepository userRepository;
 	
@@ -70,6 +70,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+        	.cors().and()
             .csrf().disable() 
             .authorizeHttpRequests(authz -> authz
             	.requestMatchers("/actuator/health").permitAll()
@@ -78,6 +79,7 @@ public class SecurityConfig {
             	.requestMatchers("/api/auth/login").permitAll() 
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/user/**").hasRole("USER")
+                .requestMatchers("/api/customers/**").hasAnyRole("ADMIN", "USER")
                 .anyRequest().authenticated()
             )
             .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), 
