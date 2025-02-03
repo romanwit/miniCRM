@@ -5,16 +5,33 @@ const ClientsList: React.FC = () => {
 
   useEffect(() => {
     const fetchClients = async () => {
-      const response = await fetch('/api/clients');
-      const data: Client[] = await response.json();
-      setClients(data);
+      const token = localStorage.getItem("jwtToken") || "";
+      try {
+        const response = await fetch('http://localhost:8080/api/customers', 
+          {
+            method: "GET",
+            headers: {
+              "Authorization": `Bearer ${token}`,
+              "Content-Type": "application/json"
+            }
+          });
+        if (!response.ok) {
+            throw new Error(`Error: ${response.status} ${response.statusText}`);
+        }
+        const data: Client[] = await response.json();
+        setClients(data);
+      }
+      catch(error) {
+        console.error("Error getting customers:", error);
+        return null;
+      }
     };
     fetchClients();
   }, []);
 
   return (
     <div>
-      <h2>Clients List</h2>
+      <h2>Customers List</h2>
       <ul>
         {clients.map((client) => (
           <li key={client.id}>{client.name} - {client.email}</li>
