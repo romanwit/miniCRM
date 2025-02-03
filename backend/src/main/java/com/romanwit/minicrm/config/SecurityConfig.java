@@ -59,6 +59,8 @@ public class SecurityConfig {
                 .requestMatchers("/user/**").hasRole("USER")
                 .anyRequest().authenticated()
             )
+            .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), 
+                    UsernamePasswordAuthenticationFilter.class)
             /*.formLogin(login -> login
                     .loginPage("/login") 
                     .permitAll()
