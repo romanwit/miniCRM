@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import LoginPage from './components/Clients/LoginPage';
 import RegisterPage from './components/Clients/RegisterPage';
 import ClientsList from './components/Clients/ClientsList';
@@ -17,12 +17,12 @@ const handleLogin = async (username: string, password: string) => {
       body: JSON.stringify({ username, password }),
     });
 
+    console.log(response);
     if (response.ok) {
       const data = await response.json();
-      localStorage.setItem("token", data.token); 
-      console.log("Success, token:", data.token);
+      localStorage.setItem("auth_token_xyz", data.token); 
       
-      window.location.href = "/dashboard";  
+      window.location.href = "/customers";  
     } else {
       const errorMessage = await response.text();
       throw new Error(errorMessage);
@@ -63,7 +63,7 @@ const handleRegister = async (username: string, password: string, email: string)
 const handleClientAdded = async (newClient: Client) => {
 
     try {
-      const response = await fetch('/api/clients', {
+      const response = await fetch('/api/customers', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -78,8 +78,8 @@ const handleClientAdded = async (newClient: Client) => {
       const savedClient = await response.json(); 
       //TODO: reload ClientsList UI
     } catch (error) {
-      console.error('Error adding client:', error);
-      alert('Error adding client. Please try again.');
+      console.error('Error adding customer:', error);
+      alert('Error adding customer. Please try again.');
     } finally {
       //setLoading(false);
     }
@@ -87,7 +87,7 @@ const handleClientAdded = async (newClient: Client) => {
 
 const handleClientUpdated = async (client: Client) => {
   try {
-    const response = await fetch(`/api/clients/${client.id}`, {
+    const response = await fetch(`/api/customers/${client.id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -100,11 +100,11 @@ const handleClientUpdated = async (client: Client) => {
     }
 
     const updatedClient = await response.json();
-    console.log('Client updated successfully:', updatedClient);
-    alert('Client updated successfully!');
+    console.log('Customer updated successfully:', updatedClient);
+    alert('Customer updated successfully!');
   } catch (error) {
-    console.error('Error updating client:', error);
-    alert(`Error updating client: ${(error as Error).message}`);
+    console.error('Error updating Customer:', error);
+    alert(`Error updating Customer: ${(error as Error).message}`);
   }
 };
 
@@ -113,11 +113,12 @@ const App: React.FC = () => {
   return (
     <Router>
       <Routes>
+        <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<LoginPage onLogin={handleLogin}/>} />
         <Route path="/register" element={<RegisterPage onRegister={handleRegister}/>} />
-        <Route path="/clients" element={<ClientsList />} />
-        <Route path="/clients/add" element={<AddClient onClientAdded={handleClientAdded}/>} />
-        <Route path="/clients/edit/:id" element={<EditClient onClientUpdated={handleClientUpdated}/>} />
+        <Route path="/customers" element={<ClientsList />} />
+        <Route path="/customers/add" element={<AddClient onClientAdded={handleClientAdded}/>} />
+        <Route path="/customers/edit/:id" element={<EditClient onClientUpdated={handleClientUpdated}/>} />
         <Route path="/admin" element={<AdminDashboard />} />
       </Routes>
     </Router>

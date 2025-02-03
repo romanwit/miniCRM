@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/clients")
+@RequestMapping("/api/customers")
+@CrossOrigin(origins = "*")
 public class ClientController {
 
     @Autowired
