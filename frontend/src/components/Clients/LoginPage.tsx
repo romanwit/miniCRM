@@ -42,15 +42,19 @@ const LoginPage: React.FC<LoginProps> = ({ onLogin }) => {
   
   useEffect(() => {
     const token = localStorage.getItem('auth_token_xyz');
-    if (token && isTokenValid(token)) {
-      const username = getUsernameFromToken(token);
-      if (username) {
-        localStorage.setItem('username', username);
-        navigate('/dashboard'); 
+    if (token) {
+      console.log("token found");
+      if (isTokenValid(token)) {
+        const username = getUsernameFromToken(token);
+        if (username) {
+          localStorage.setItem('username', username);
+          navigate('/customers'); 
+        }
+      } else {
+        console.log("removing token from storage");
+        localStorage.removeItem('auth_token_xyz'); 
+        localStorage.removeItem('username'); 
       }
-    } else {
-      localStorage.removeItem('auth_token_xyz'); 
-      localStorage.removeItem('username'); 
     }
   }, [navigate]);
 
@@ -61,27 +65,29 @@ const LoginPage: React.FC<LoginProps> = ({ onLogin }) => {
     const token = localStorage.getItem('auth_token_xyz');
     if (token && isTokenValid(token)) {
       localStorage.setItem('auth_token_xyz', token); 
+      console.log("token saved");
       const username = getUsernameFromToken(token);
       if (username) {
         localStorage.setItem('username', username);
-        navigate('/dashboard'); 
+        navigate('/customers'); 
       }
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className="login-form" onSubmit={handleSubmit}>
       <div>
-        <label>Username</label>
+        <label>Username</label>&nbsp;&nbsp;
         <input
           type="text"
           value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          onChange={(e) => setUsername(e.target.value)} 
+          ref={inputRef}
           required
         />
       </div>
       <div>
-        <label>Password</label>
+        <label>Password</label>&nbsp;&nbsp;
         <input
           type="password"
           value={password}
