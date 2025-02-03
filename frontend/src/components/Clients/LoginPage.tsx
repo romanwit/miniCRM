@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import '../../css/LoginPage.css';
@@ -34,6 +34,11 @@ const LoginPage: React.FC<LoginProps> = ({ onLogin }) => {
     }
   };
 
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus(); 
+    }
+  }, []);
   
   useEffect(() => {
     const token = localStorage.getItem('auth_token_xyz');
