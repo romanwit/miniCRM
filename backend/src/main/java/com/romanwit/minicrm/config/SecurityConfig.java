@@ -12,32 +12,53 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.web.SecurityFilterChain;
 
+import com.romanwit.minicrm.controller.AuthController;
 import com.romanwit.minicrm.model.User;
 import com.romanwit.minicrm.repository.UserRepository;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.romanwit.minicrm.util.JwtAuthenticationFilter;
+import com.romanwit.minicrm.util.JwtTokenProvider;
+
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 	
-	private final UserRepository userRepository;
+	private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(AuthController.class); 
+	
+	//private final UserRepository userRepository;
+	
+	private final JwtTokenProvider jwtTokenProvider;
+	
+	private final UserDetailsServiceConfig userDetailsServiceConfig;
 
-	public SecurityConfig(UserRepository userRepository) {
-	    this.userRepository = userRepository;
+	//public SecurityConfig(UserRepository userRepository, JwtTokenProvider jwtTokenProvider) {
+    public SecurityConfig(UserDetailsServiceConfig userDetailsServiceConfig, JwtTokenProvider jwtTokenProvider) {
+	    //this.userRepository = userRepository;
+    	this.userDetailsServiceConfig = userDetailsServiceConfig;
+	    this.jwtTokenProvider = jwtTokenProvider;
 	}
 
-	@Bean
+	/*@Bean
 	public UserDetailsService userDetailsService() {
 	    return username -> {
 	        User user = userRepository.findByUsername(username)
 	                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+	        
+	        logger.info("User found " + username);
 
 	        return org.springframework.security.core.userdetails.User.builder()
 	                .username(user.getUsername())
 	                .password(user.getPassword())
-	                .roles(user.getRole().getName()) // Assuming `getName()` returns the role name
+	                .roles(user.getRole().getName()) 
 	                .build();
 	    };
-	}
+	}*/
 
 
     @Bean
@@ -85,7 +106,7 @@ public class SecurityConfig {
         AuthenticationManagerBuilder authenticationManagerBuilder = 
                 http.getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder
-            .userDetailsService(userDetailsService())
+            .userDetailsService(userDetailsServiceConfig.userDetailsService())
             .passwordEncoder(passwordEncoder());
         return authenticationManagerBuilder.build();
     }

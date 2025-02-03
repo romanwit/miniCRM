@@ -9,6 +9,11 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+
+
 @Component
 public class JwtTokenProvider {
 
@@ -17,6 +22,12 @@ public class JwtTokenProvider {
 
     @Value("${jwt.expiration}")
     private long validityInMilliseconds;
+    
+    private final UserDetailsService userDetailsService;
+    
+    public JwtTokenProvider(UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
 
     public String generateToken(UserDetails userDetails) {
         return Jwts.builder()
@@ -39,6 +50,12 @@ public class JwtTokenProvider {
     public String getUsernameFromToken(String token) {
         Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
         return claims.getSubject();
+    }
+    
+    public Authentication getAuthentication(String token) {
+        String username = getUsernameFromToken(token);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 }
 
