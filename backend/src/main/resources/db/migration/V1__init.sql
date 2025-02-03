@@ -60,6 +60,6 @@ BEGIN
 END $$;
 
 INSERT INTO users (username, password, role_id) 
-VALUES ('admin', '$2a$10$Dowf7GF1/p5Q7DHRy2Vq.eHUE6DrJIQ99tp2.v3TiyC5QdTlj5R3a', 
+VALUES ('admin', '$2a$12$pTCA8Bq4Y2NxiAC5NvIDMe0zFO6Jkb5Dp/lvUB6NSk.lvkVgrhDEy', 
         (SELECT id FROM roles WHERE name = 'ADMIN'));
 
