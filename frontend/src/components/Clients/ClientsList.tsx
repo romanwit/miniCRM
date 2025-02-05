@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 const ClientsList: React.FC = () => {
-  const [clients, setClients] = useState<Client[]>([]);
+  const [clients, setClients] = useState<Customer[]>([]);
 
   useEffect(() => {
     const fetchClients = async () => {
@@ -18,7 +18,7 @@ const ClientsList: React.FC = () => {
         if (!response.ok) {
             throw new Error(`Error: ${response.status} ${response.statusText}`);
         }
-        const data: Client[] = await response.json();
+        const data: Customer[] = await response.json();
         setClients(data);
       }
       catch(error) {

@@ -4,7 +4,7 @@ interface Property {
   value: string;
 }
 
-interface Client {
+interface Customer {
   id: number;
   name: string;
   registrationDate: string;

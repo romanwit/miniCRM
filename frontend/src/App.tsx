@@ -60,7 +60,7 @@ const handleRegister = async (username: string, password: string, email: string)
   }
 };
 
-const handleClientAdded = async (newClient: Client) => {
+const handleClientAdded = async (newClient: Customer) => {
 
     try {
       const response = await fetch('/api/customers', {
@@ -85,7 +85,7 @@ const handleClientAdded = async (newClient: Client) => {
     }
 }
 
-const handleClientUpdated = async (client: Client) => {
+const handleClientUpdated = async (client: Customer) => {
   try {
     const response = await fetch(`/api/customers/${client.id}`, {
       method: 'PUT',
