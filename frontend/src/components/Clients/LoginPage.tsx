@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { getToken } from '../../services/tokenService';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import '../../css/LoginPage.css';
@@ -41,11 +42,11 @@ const LoginPage: React.FC<LoginProps> = ({ onLogin }) => {
   }, []);
   
   useEffect(() => {
-    const token = localStorage.getItem('auth_token_xyz');
+    const token = getToken();
     if (token) {
       console.log("token found");
-      if (isTokenValid(token)) {
-        const username = getUsernameFromToken(token);
+      if (isTokenValid(token.valueOf())) {
+        const username = getUsernameFromToken(token.valueOf());
         if (username) {
           localStorage.setItem('username', username);
           navigate('/customers'); 
@@ -62,11 +63,11 @@ const LoginPage: React.FC<LoginProps> = ({ onLogin }) => {
     event.preventDefault();
     await onLogin(username, password); 
 
-    const token = localStorage.getItem('auth_token_xyz');
-    if (token && isTokenValid(token)) {
-      localStorage.setItem('auth_token_xyz', token); 
+    const token = getToken();
+    if (token && isTokenValid(token.valueOf())) {
+      localStorage.setItem('auth_token_xyz', token.valueOf()); 
       console.log("token saved");
-      const username = getUsernameFromToken(token);
+      const username = getUsernameFromToken(token.valueOf());
       if (username) {
         localStorage.setItem('username', username);
         navigate('/customers'); 
