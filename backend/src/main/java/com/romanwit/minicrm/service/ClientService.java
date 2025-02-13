@@ -23,6 +23,10 @@ public class ClientService {
     public List<Client> getAllClients() {
         return clientRepository.findAll();
     }
+    
+    public Client getClientById(Long id) {
+    	return clientRepository.findById(id).orElse(null);
+    }
 
     @Transactional
     public Client createClient(Client client) {

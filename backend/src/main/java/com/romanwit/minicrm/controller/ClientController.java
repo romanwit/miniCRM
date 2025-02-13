@@ -4,6 +4,8 @@ import com.romanwit.minicrm.model.Client;
 import com.romanwit.minicrm.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+
 
 import java.util.List;
 
@@ -18,6 +20,12 @@ public class ClientController {
     @GetMapping
     public List<Client> getAllClients() {
         return clientService.getAllClients();
+    }
+    
+    @GetMapping("/{id}")
+    public ResponseEntity<Client> getClientById(@PathVariable Long id) {
+    	Client client = clientService.getClientById(id);
+        return (client != null) ? ResponseEntity.ok(client) : ResponseEntity.notFound().build();
     }
 
     @PostMapping
