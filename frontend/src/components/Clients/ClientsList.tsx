@@ -32,10 +32,16 @@ const ClientsList: React.FC = () => {
   return (
     <div>
       <h2>Customers List</h2>
+      <button onClick={() => window.location.href = '/customers/add'}>Add Client</button> 
       <ul>
-        {clients.map((client) => (
-          <li key={client.id}>{client.name} - {client.email}</li>
-        ))}
+      {clients.map((client) => (
+      <li
+        key={client.id}
+        onDoubleClick={() => window.location.href = `/customers/edit/${client.id}`} 
+      >
+        {client.name} - {client.email}
+      </li>
+    ))}
       </ul>
     </div>
   );
