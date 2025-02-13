@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { getToken } from '../../services/tokenService';
 
-const ClientsList: React.FC = () => {
+const CustomersList: React.FC = () => {
   const [clients, setClients] = useState<Customer[]>([]);
 
   useEffect(() => {
     const fetchClients = async () => {
-      const token = localStorage.getItem("auth_token_xyz") || "";
+      const token = getToken();
       try {
         const response = await fetch('http://localhost:8080/api/customers', 
           {
@@ -47,5 +48,5 @@ const ClientsList: React.FC = () => {
   );
 };
 
-export default ClientsList;
+export default CustomersList;
 
