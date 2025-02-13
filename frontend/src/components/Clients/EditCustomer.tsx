@@ -1,25 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { getToken } from '../../services/tokenService';
 
-interface EditClientProps {
-  onClientUpdated: (client: Client) => void;
+interface EditCustomerProps {
+  onCustomerUpdated: (customer: Customer) => void;
 }
 
-const EditClient: React.FC<EditClientProps> = ({ onClientUpdated }) => {
+const EditCustomer: React.FC<EditCustomerProps> = ({ onCustomerUpdated }) => {
 
   const { id } = useParams<{ id: string }>();
   const clientId = Number(id);
 
-  const [client, setClient] = useState<Client | null>(null);
+  const [client, setClient] = useState<Customer | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchClient = async () => {
+      const token = getToken();
       try {
-        const response = await fetch(`/api/clients/${clientId}`);
-        if (!response.ok) throw new Error('Failed to fetch client data');
-        const data: Client = await response.json();
+        const response = await fetch(`http://localhost:8080/api/customers/${clientId}`, {
+          method: 'GET',
+          headers: { 
+            "Authorization": `Bearer ${token}`
+          }
+        });
+        if (!response.ok) throw new Error('Failed to fetch customer data');
+        const data: Customer = await response.json();
         setClient(data);
       } catch (err) {
         setError((err as Error).message);
@@ -41,26 +48,29 @@ const EditClient: React.FC<EditClientProps> = ({ onClientUpdated }) => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!client) return;
-
+    /*const token = getToken();
     try {
-      const response = await fetch(`/api/clients/${clientId}`, {
+      const response = await fetch(`http://localhost:8080/api/customers/${clientId}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          "Authorization": `Bearer ${token}` 
+        },
         body: JSON.stringify(client),
       });
 
       if (!response.ok) throw new Error('Failed to update client');
 
-      const updatedClient: Client = await response.json();
-      onClientUpdated(updatedClient);
-    } catch (err) {
+      const updatedClient: Customer = await response.json();*/
+      onCustomerUpdated(client);
+    /*} catch (err) {
       setError((err as Error).message);
-    }
+    }*/
   };
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
-  if (!client) return <div>Client not found</div>;
+  if (!client) return <div>Customer not found</div>;
 
   return (
     <form onSubmit={handleSubmit}>
@@ -77,15 +87,15 @@ const EditClient: React.FC<EditClientProps> = ({ onClientUpdated }) => {
         <input type="tel" value={client.phone} onChange={(e) => setClient({ ...client, phone: e.target.value })} />
       </div>
       <h3>Properties</h3>
-      {client.properties.map((prop) => (
+      {client.properties?.map((prop) => (
         <div key={prop.id}>
           <label>{prop.type}</label>
           <input type="text" value={prop.value} onChange={(e) => handlePropertyChange(e, prop.id)} />
         </div>
-      ))}
-      <button type="submit">Update Client</button>
+      ))??[]}
+      <button type="submit">Update Customer</button>
     </form>
   );
 };
 
-export default EditClient;
+export default EditCustomer;
