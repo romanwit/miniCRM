@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { getToken } from '../../services/authService';
 
 const CustomersList: React.FC = () => {
-  const [clients, setClients] = useState<Customer[]>([]);
+  const [customers, setCustomers] = useState<Customer[]>([]);
 
   useEffect(() => {
-    const fetchClients = async () => {
+    const fetchCustomers = async () => {
       const token = getToken();
       try {
         const response = await fetch('http://localhost:8080/api/customers', 
@@ -20,27 +20,27 @@ const CustomersList: React.FC = () => {
             throw new Error(`Error: ${response.status} ${response.statusText}`);
         }
         const data: Customer[] = await response.json();
-        setClients(data);
+        setCustomers(data);
       }
       catch(error) {
         console.error("Error getting customers:", error);
         return null;
       }
     };
-    fetchClients();
+    fetchCustomers();
   }, []);
 
   return (
     <div>
       <h2>Customers List</h2>
-      <button onClick={() => window.location.href = '/customers/add'}>Add Client</button> 
+      <button onClick={() => window.location.href = '/customers/add'}>Add customer</button> 
       <ul>
-      {clients.map((client) => (
+      {customers.map((customer) => (
       <li
-        key={client.id}
-        onDoubleClick={() => window.location.href = `/customers/edit/${client.id}`} 
+        key={customer.id}
+        onDoubleClick={() => window.location.href = `/customers/edit/${customer.id}`} 
       >
-        {client.name} - {client.email}
+        {customer.name} - {customer.email}
       </li>
     ))}
       </ul>
