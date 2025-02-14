@@ -1,13 +1,14 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-import LoginPage from './components/Clients/LoginPage';
-import RegisterPage from './components/Clients/RegisterPage';
-import CustomersList from './components/Clients/CustomersList';
-import AddCustomer from './components/Clients/AddCustomer';
-import EditCustomer from './components/Clients/EditCustomer';
+import LoginPage from './components/Customers/LoginPage';
+import RegisterPage from './components/Customers/RegisterPage';
+import CustomersList from './components/Customers/CustomersList';
+import AddCustomer from './components/Customers/AddCustomer';
+import EditCustomer from './components/Customers/EditCustomer';
 import AdminDashboard from './components/Admin/AdminDashboard';
 import { handleLogin, handleRegister } from "./services/authService";
 import { handleCustomerAdded, handleCustomerUpdated } from "./services/customerService";
+import './css/Forms.css';
 
 const App: React.FC = () => {
   return (

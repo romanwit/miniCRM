@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { getToken } from '../../services/tokenService';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
-import '../../css/LoginPage.css';
 
 interface LoginProps {
   onLogin: (username: string, password: string) => void;
