@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { getToken } from '../../services/authService';
+import { getToken, saveToken } from '../../services/authService';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 
@@ -64,8 +64,7 @@ const LoginPage: React.FC<LoginProps> = ({ onLogin }) => {
 
     const token = getToken();
     if (token && isTokenValid(token.valueOf())) {
-      localStorage.setItem('auth_token_xyz', token.valueOf()); 
-      console.log("token saved");
+      saveToken(token);
       const username = getUsernameFromToken(token.valueOf());
       if (username) {
         localStorage.setItem('username', username);

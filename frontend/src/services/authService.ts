@@ -1,4 +1,5 @@
 const keyOfToken: string = "auth_token_xyz";
+
 export const handleLogin = async (username: string, password: string) => {
   try {
     const response = await fetch("http://localhost:8080/api/auth/login", {
@@ -44,4 +45,9 @@ export const getToken = (): String | null => {
   const token = localStorage.getItem(keyOfToken);
   return token;
 };
+
+export const saveToken = (token: String) => {
+  localStorage.setItem(keyOfToken, token.valueOf()); 
+  console.log("token saved");
+}
 
