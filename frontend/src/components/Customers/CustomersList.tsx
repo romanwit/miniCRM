@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getToken } from '../../services/tokenService';
+import { getToken } from '../../services/authService';
 
 const CustomersList: React.FC = () => {
   const [clients, setClients] = useState<Customer[]>([]);

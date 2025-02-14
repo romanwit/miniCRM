@@ -1,3 +1,4 @@
+const keyOfToken: string = "auth_token_xyz";
 export const handleLogin = async (username: string, password: string) => {
   try {
     const response = await fetch("http://localhost:8080/api/auth/login", {
@@ -8,7 +9,7 @@ export const handleLogin = async (username: string, password: string) => {
 
     if (response.ok) {
       const data = await response.json();
-      localStorage.setItem("auth_token_xyz", data.token);
+      localStorage.setItem(keyOfToken, data.token);
       window.location.href = "/customers";
     } else {
       throw new Error(await response.text());
@@ -37,5 +38,10 @@ export const handleRegister = async (username: string, password: string, email: 
     console.error('Error during registration:', error);
     alert("An error occurred. Please try again.");
   }
+};
+
+export const getToken = (): String | null => {
+  const token = localStorage.getItem(keyOfToken);
+  return token;
 };
 

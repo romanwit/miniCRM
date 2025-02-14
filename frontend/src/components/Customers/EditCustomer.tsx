@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { getToken } from '../../services/tokenService';
+import { getToken } from '../../services/authService';
 
 interface EditCustomerProps {
   onCustomerUpdated: (customer: Customer) => void;

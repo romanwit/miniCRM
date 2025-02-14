@@ -1,5 +1,5 @@
 
-import { getToken } from './tokenService';
+import { getToken } from './authService';
 
 export const handleCustomerAdded = async (newCustomer: Customer) => {
   const token = getToken();
