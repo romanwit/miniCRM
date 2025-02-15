@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-import LoginPage from './components/Customers/LoginPage';
-import RegisterPage from './components/Customers/RegisterPage';
+import LoginPage from './components/Users/LoginPage';
+import RegisterPage from './components/Users/RegisterPage';
 import CustomersList from './components/Customers/CustomersList';
 import AddCustomer from './components/Customers/AddCustomer';
 import EditCustomer from './components/Customers/EditCustomer';
