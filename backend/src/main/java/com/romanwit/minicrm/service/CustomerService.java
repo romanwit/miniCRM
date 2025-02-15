@@ -1,7 +1,7 @@
 package com.romanwit.minicrm.service;
 
-import com.romanwit.minicrm.model.Client;
-import com.romanwit.minicrm.repository.ClientRepository;
+import com.romanwit.minicrm.model.Customer;
+import com.romanwit.minicrm.repository.CustomerRepository;
 import com.romanwit.minicrm.repository.AuditLogRepository;
 import com.romanwit.minicrm.model.AuditLog;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,47 +15,47 @@ import java.util.Optional;
 public class CustomerService {
 
     @Autowired
-    private ClientRepository clientRepository;
+    private CustomerRepository customerRepository;
 
     @Autowired
     private AuditLogRepository auditLogRepository;
 
-    public List<Client> getAllCustomers() {
-        return clientRepository.findAll();
+    public List<Customer> getAllCustomers() {
+        return customerRepository.findAll();
     }
     
-    public Client getCustomerById(Long id) {
-    	return clientRepository.findById(id).orElse(null);
+    public Customer getCustomerById(Long id) {
+    	return customerRepository.findById(id).orElse(null);
     }
 
     @Transactional
-    public Client createCustomer(Client client) {
-        Client savedClient = clientRepository.save(client);
-        logAction("Client", savedClient.getId(), "CREATE", null, savedClient.toString());
-        return savedClient;
+    public Customer createCustomer(Customer customer) {
+    	Customer savedCustomer = customerRepository.save(customer);
+        logAction("Customer", savedCustomer.getId(), "CREATE", null, savedCustomer.toString());
+        return savedCustomer;
     }
 
     @Transactional
-    public Client updateCustomer(Client client) {
-        Optional<Client> existing = clientRepository.findById(client.getId());
+    public Customer updateCustomer(Customer customer) {
+        Optional<Customer> existing = customerRepository.findById(customer.getId());
         if (existing.isPresent()) {
-            Client oldClient = existing.get();
-            Client updatedClient = clientRepository.save(client);
-            logAction("Client", updatedClient.getId(), "UPDATE", oldClient.toString(), updatedClient.toString());
-            return updatedClient;
+        	Customer oldCustomer = existing.get();
+        	Customer updatedCustomer = customerRepository.save(customer);
+            logAction("Client", updatedCustomer.getId(), "UPDATE", oldCustomer.toString(), updatedCustomer.toString());
+            return updatedCustomer;
         }
         throw new IllegalArgumentException("Client not found");
     }
 
     @Transactional
-    public void deleteCustomer(Long clientId) {
-        Optional<Client> existing = clientRepository.findById(clientId);
+    public void deleteCustomer(Long customerId) {
+        Optional<Customer> existing = customerRepository.findById(customerId);
         if (existing.isPresent()) {
-            Client client = existing.get();
-            clientRepository.delete(client);
-            logAction("Client", clientId, "DELETE", client.toString(), null);
+        	Customer customer = existing.get();
+            customerRepository.delete(customer);
+            logAction("Customer", customerId, "DELETE", customer.toString(), null);
         } else {
-            throw new IllegalArgumentException("Client not found");
+            throw new IllegalArgumentException("Customer not found");
         }
     }
 
