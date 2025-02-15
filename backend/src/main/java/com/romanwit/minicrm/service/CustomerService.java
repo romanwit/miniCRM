@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ClientService {
+public class CustomerService {
 
     @Autowired
     private ClientRepository clientRepository;
@@ -20,23 +20,23 @@ public class ClientService {
     @Autowired
     private AuditLogRepository auditLogRepository;
 
-    public List<Client> getAllClients() {
+    public List<Client> getAllCustomers() {
         return clientRepository.findAll();
     }
     
-    public Client getClientById(Long id) {
+    public Client getCustomerById(Long id) {
     	return clientRepository.findById(id).orElse(null);
     }
 
     @Transactional
-    public Client createClient(Client client) {
+    public Client createCustomer(Client client) {
         Client savedClient = clientRepository.save(client);
         logAction("Client", savedClient.getId(), "CREATE", null, savedClient.toString());
         return savedClient;
     }
 
     @Transactional
-    public Client updateClient(Client client) {
+    public Client updateCustomer(Client client) {
         Optional<Client> existing = clientRepository.findById(client.getId());
         if (existing.isPresent()) {
             Client oldClient = existing.get();
@@ -48,7 +48,7 @@ public class ClientService {
     }
 
     @Transactional
-    public void deleteClient(Long clientId) {
+    public void deleteCustomer(Long clientId) {
         Optional<Client> existing = clientRepository.findById(clientId);
         if (existing.isPresent()) {
             Client client = existing.get();
