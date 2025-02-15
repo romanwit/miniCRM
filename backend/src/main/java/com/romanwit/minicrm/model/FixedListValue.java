@@ -12,7 +12,7 @@ public class FixedListValue implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "property_id", nullable = false)
-    private ClientProperty property;
+    private CustomerProperty property;
 
     @Column(nullable = false)
     private String value;
@@ -26,11 +26,11 @@ public class FixedListValue implements Serializable {
         this.id = id;
     }
 
-    public ClientProperty getProperty() {
+    public CustomerProperty getProperty() {
         return property;
     }
 
-    public void setProperty(ClientProperty property) {
+    public void setProperty(CustomerProperty property) {
         this.property = property;
     }
 

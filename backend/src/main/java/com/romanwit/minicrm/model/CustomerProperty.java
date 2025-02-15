@@ -5,7 +5,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "client_properties")
-public class ClientProperty implements Serializable {
+public class CustomerProperty implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
