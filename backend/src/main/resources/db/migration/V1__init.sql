@@ -11,11 +11,11 @@ CREATE TABLE IF NOT EXISTS users (
     role_id INT NOT NULL REFERENCES roles(id)
 );
 
-CREATE TABLE IF NOT EXISTS clients (
+CREATE TABLE IF NOT EXISTS customers (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
+    name VARCHAR(255) UNIQUE NOT NULL,
     registration_date TIMESTAMP NOT NULL,
-    email VARCHAR(255) UNIQUE NOT NULL,
+    email VARCHAR(255) NOT NULL,
     phone VARCHAR(50) NOT NULL
 );
 
@@ -25,16 +25,16 @@ CREATE TABLE IF NOT EXISTS property_types (
     type VARCHAR(50) CHECK (type IN ('STRING', 'DATE', 'NUMBER', 'FIXED_LIST')) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS client_properties (
+CREATE TABLE IF NOT EXISTS customer_properties (
     id SERIAL PRIMARY KEY,
-    client_id INT REFERENCES clients(id) ON DELETE CASCADE,
+    customer_id INT REFERENCES customers(id) ON DELETE CASCADE,
     property_type_id INT REFERENCES property_types(id) ON DELETE CASCADE,
     value VARCHAR(255)
 );
 
 CREATE TABLE IF NOT EXISTS fixed_list_values (
     id SERIAL PRIMARY KEY,
-    property_id INT REFERENCES client_properties(id) ON DELETE CASCADE,
+    property_id INT REFERENCES customer_properties(id) ON DELETE CASCADE,
     value VARCHAR(255) NOT NULL
 );
 

@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "client_properties")
+@Table(name = "customer_properties")
 public class CustomerProperty implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
