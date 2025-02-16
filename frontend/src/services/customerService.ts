@@ -1,5 +1,6 @@
 
 import { getToken } from './authService';
+import { baseUrl } from './constService';
 
 export const handleCustomerAdded = async (newCustomer: Customer) => {
   const token = getToken();
@@ -8,7 +9,7 @@ export const handleCustomerAdded = async (newCustomer: Customer) => {
     return;
   }
   try {
-    const response = await fetch("http://localhost:8080/api/customers", {
+    const response = await fetch(baseUrl + "/api/customers", {
       method: "POST",
       headers: { 
         "Authorization": `Bearer ${token}`,
@@ -36,7 +37,7 @@ export const handleCustomerUpdated = async (customer: Customer) => {
     return;
   }
   try {
-    const response = await fetch(`http://localhost:8080/api/customers/${customer.id}`, {
+    const response = await fetch(baseUrl + `/api/customers/${customer.id}`, {
       method: "PUT",
       headers: { 
         "Authorization": `Bearer ${token}`,

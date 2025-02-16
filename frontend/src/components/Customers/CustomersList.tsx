@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getToken } from '../../services/authService';
+import { baseUrl } from '../../services/constService';
 
 const CustomersList: React.FC = () => {
   const [customers, setCustomers] = useState<Customer[]>([]);
@@ -8,7 +9,7 @@ const CustomersList: React.FC = () => {
     const fetchCustomers = async () => {
       const token = getToken();
       try {
-        const response = await fetch('http://localhost:8080/api/customers', 
+        const response = await fetch(baseUrl + '/api/customers', 
           {
             method: "GET",
             headers: {

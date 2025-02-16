@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { getToken } from '../../services/authService';
+import { baseUrl } from '../../services/constService';
 
 interface EditCustomerProps {
   onCustomerUpdated: (customer: Customer) => void;
@@ -19,7 +20,7 @@ const EditCustomer: React.FC<EditCustomerProps> = ({ onCustomerUpdated }) => {
     const fetchCustomer = async () => {
       const token = getToken();
       try {
-        const response = await fetch(`http://localhost:8080/api/customers/${customerId}`, {
+        const response = await fetch(baseUrl + `/api/customers/${customerId}`, {
           method: 'GET',
           headers: { 
             "Authorization": `Bearer ${token}`

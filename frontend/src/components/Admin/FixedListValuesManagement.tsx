@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getToken } from '../../services/authService';
+import { baseUrl } from '../../services/constService';
 
 interface FixedListValue {
   id: number;
@@ -13,7 +14,7 @@ const FixedListValuesManagement: React.FC = () => {
   useEffect(() => {
     const fetchFixedListValues = async () => {
       const token = getToken();
-      const response = await fetch('http://localhost:8080/admin/fixed-list-values', {
+      const response = await fetch(baseUrl + '/admin/fixed-list-values', {
         method: "GET",
         headers: {
           "Authorization": `Bearer ${token}`

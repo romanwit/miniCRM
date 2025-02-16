@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getToken } from '../../services/authService';
+import { baseUrl } from '../../services/constService';
 
 interface PropertyType {
   id: number;
@@ -13,7 +14,7 @@ const PropertyTypesManagement: React.FC = () => {
   useEffect(() => {
     const fetchPropertyTypes = async () => {
       const token = getToken();
-      const response = await fetch('http://localhost:8080/admin/property-types', 
+      const response = await fetch(baseUrl + '/admin/property-types', 
         {
           method: "GET",
           headers: {

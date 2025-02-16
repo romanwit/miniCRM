@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getToken } from '../../services/authService';
+import { baseUrl } from '../../services/constService';
 
 interface User {
   id: number;
@@ -16,7 +17,7 @@ const UsersManagement: React.FC = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       const token = getToken();
-      const response = await fetch('http://localhost:8080/admin/users',
+      const response = await fetch(baseUrl + '/admin/users',
         {
           method: "GET",
           headers: {
@@ -25,7 +26,6 @@ const UsersManagement: React.FC = () => {
         }
       );
       const data: User[] = await response.json();
-      console.log(data);
       setUsers(data);
     };
     fetchUsers();

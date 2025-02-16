@@ -1,8 +1,10 @@
+import { baseUrl } from './constService';
+
 const keyOfToken: string = "auth_token_xyz";
 
 export const handleLogin = async (username: string, password: string) => {
   try {
-    const response = await fetch("http://localhost:8080/api/auth/login", {
+    const response = await fetch(baseUrl + "/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),
@@ -22,7 +24,7 @@ export const handleLogin = async (username: string, password: string) => {
 
 export const handleRegister = async (username: string, password: string, email: string) => {
   try {
-    const response = await fetch("/api/auth/register", {
+    const response = await fetch(baseUrl + "/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password, email }),
