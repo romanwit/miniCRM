@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { getToken } from '../../services/authService';
 
 interface PropertyType {
   id: number;
@@ -11,7 +12,15 @@ const PropertyTypesManagement: React.FC = () => {
 
   useEffect(() => {
     const fetchPropertyTypes = async () => {
-      const response = await fetch('/api/property-types');
+      const token = getToken();
+      const response = await fetch('http://localhost:8080/admin/property-types', 
+        {
+          method: "GET",
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+        }
+      );
       const data: PropertyType[] = await response.json();
       setPropertyTypes(data);
     };

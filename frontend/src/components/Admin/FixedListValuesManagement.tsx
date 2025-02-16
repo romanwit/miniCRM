@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { getToken } from '../../services/authService';
 
 interface FixedListValue {
   id: number;
@@ -11,7 +12,13 @@ const FixedListValuesManagement: React.FC = () => {
 
   useEffect(() => {
     const fetchFixedListValues = async () => {
-      const response = await fetch('/api/fixed-list-values');
+      const token = getToken();
+      const response = await fetch('http://localhost:8080/admin/fixed-list-values', {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
       const data: FixedListValue[] = await response.json();
       setFixedListValues(data);
     };
