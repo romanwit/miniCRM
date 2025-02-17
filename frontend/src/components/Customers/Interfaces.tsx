@@ -1,7 +1,14 @@
+enum PropertyType {
+  STRING = "STRING",
+  DATE = "DATE",
+  NUMBER = "NUMBER",
+  FIXED_LIST = "FIXED_LIST"
+}
+
 interface Property {
   id: number;
-  type: string;
-  value: string;
+  type: PropertyType;
+  value: unknown;
 }
 
 interface Customer {
@@ -10,7 +17,5 @@ interface Customer {
   registrationDate: string;
   email: string;
   phone: string;
-  properties: Property[];
+  properties: Map<PropertyType, unknown>;
 }
-
-
