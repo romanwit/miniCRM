@@ -7,8 +7,8 @@ enum PropertyType {
 
 interface Property {
   id: number;
+  name: string;
   type: PropertyType;
-  value: unknown;
 }
 
 interface Customer {
@@ -17,5 +17,5 @@ interface Customer {
   registrationDate: string;
   email: string;
   phone: string;
-  properties: Map<PropertyType, unknown>;
+  properties: Map<Property, unknown>;
 }
