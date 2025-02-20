@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { getToken } from '../../services/authService';
 import { baseUrl } from '../../services/constService';
+import { getAllProperties } from '../../services/customerPropertiesService';
 
 interface EditCustomerProps {
   onCustomerUpdated: (customer: Customer) => void;
@@ -11,6 +12,7 @@ const EditCustomer: React.FC<EditCustomerProps> = ({ onCustomerUpdated }) => {
 
   const { id } = useParams<{ id: string }>();
   const customerId = Number(id);
+  var allProperties: Property[];
 
   const [customer, setCustomer] = useState<Customer | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -29,17 +31,18 @@ const EditCustomer: React.FC<EditCustomerProps> = ({ onCustomerUpdated }) => {
         if (!response.ok) throw new Error('Failed to fetch customer data');
         const data: Customer = await response.json();
         console.log(data.properties);
-        if (data.properties /*&& data.properties instanceof Map*/) {
-          console.log("gotcha");
-        } else {
-          console.log("nope");
-        }
+        console.log(`size ${Object.entries(data.properties).length}`);
         setCustomer(data);
       } catch (err) {
         setError((err as Error).message);
       } finally {
         setLoading(false);
       }
+
+      allProperties = await getAllProperties();
+
+      console.log(allProperties);
+
     };
     fetchCustomer();
   }, [customerId]);
@@ -113,7 +116,7 @@ const EditCustomer: React.FC<EditCustomerProps> = ({ onCustomerUpdated }) => {
         <label>Phone</label>
         <input type="tel" value={customer.phone} onChange={(e) => setCustomer({ ...customer, phone: e.target.value })} />
       </div>
-      <h3>Properties</h3>
+      {customer.properties && Object.entries(customer.properties).length > 0 && <h3>Properties</h3>}
       {
         //customer.properties && customer.properties instanceof Map ? (
         customer.properties ? (
@@ -121,7 +124,7 @@ const EditCustomer: React.FC<EditCustomerProps> = ({ onCustomerUpdated }) => {
           Object.entries(customer.properties).map(([key, value]) => (
           //customer.properties.forEach(([key, value]) => (
             <div key={key/*.id*/}>
-              <label>{typeof (customer.properties as Map<Property, unknown>)/*key.type*/}</label>
+              <label>{/*key.type*/}</label>
               <input
                 type="text"
                 value={value as string} 
