@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { getToken } from '../../services/authService';
 import { baseUrl } from '../../services/constService';
-import { getAllProperties } from '../../services/customerPropertiesService';
+import { getAllPropertyTypes } from '../../services/propertyTypes';
 
 interface EditCustomerProps {
   onCustomerUpdated: (customer: Customer) => void;
@@ -12,7 +12,7 @@ const EditCustomer: React.FC<EditCustomerProps> = ({ onCustomerUpdated }) => {
 
   const { id } = useParams<{ id: string }>();
   const customerId = Number(id);
-  var allProperties: Property[];
+  var allPropertyTypes: PropertyType[];
 
   const [customer, setCustomer] = useState<Customer | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -39,9 +39,9 @@ const EditCustomer: React.FC<EditCustomerProps> = ({ onCustomerUpdated }) => {
         setLoading(false);
       }
 
-      allProperties = await getAllProperties();
+      allPropertyTypes = await getAllPropertyTypes();
 
-      console.log(allProperties);
+      console.log(allPropertyTypes);
 
     };
     fetchCustomer();
