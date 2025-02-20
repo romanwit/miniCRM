@@ -11,8 +11,8 @@ public class CustomerProperty implements Serializable {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "client_id", nullable = false)
-    private Customer client;
+    @JoinColumn(name = "customer_id", nullable = false)
+    private Customer customer;
 
     @ManyToOne
     @JoinColumn(name = "property_type_id", nullable = false)
@@ -31,11 +31,11 @@ public class CustomerProperty implements Serializable {
     }
 
     public Customer getClient() {
-        return client;
+        return customer;
     }
 
     public void setClient(Customer client) {
-        this.client = client;
+        this.customer = client;
     }
 
     public PropertyType getPropertyType() {
