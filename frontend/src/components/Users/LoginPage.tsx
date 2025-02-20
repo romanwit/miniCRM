@@ -20,7 +20,7 @@ const LoginPage: React.FC<LoginProps> = ({ onLogin }) => {
       const now = Date.now() / 1000; 
       return decoded.exp && decoded.exp > now; 
     } catch (error) {
-      console.log("token is expired");
+      console.log(`token is expired with error ${error}`);
       return false; 
     }
   };

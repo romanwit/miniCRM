@@ -21,6 +21,7 @@ const CustomersList: React.FC = () => {
             throw new Error(`Error: ${response.status} ${response.statusText}`);
         }
         const data: Customer[] = await response.json();
+        //console.log(data[0].properties.get);
         setCustomers(data);
       }
       catch(error) {
