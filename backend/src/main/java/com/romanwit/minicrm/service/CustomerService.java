@@ -1,15 +1,25 @@
 package com.romanwit.minicrm.service;
 
 import com.romanwit.minicrm.model.Customer;
+import com.romanwit.minicrm.model.CustomerProperty;
+import com.romanwit.minicrm.model.PropertyType;
 import com.romanwit.minicrm.repository.CustomerRepository;
+import com.romanwit.minicrm.repository.PropertyTypeRepository;
 import com.romanwit.minicrm.repository.AuditLogRepository;
+import com.romanwit.minicrm.repository.CustomerPropertyRepository;
+import com.romanwit.minicrm.dto.CustomerWithAdditionalProperties;
 import com.romanwit.minicrm.model.AuditLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class CustomerService {
@@ -19,14 +29,81 @@ public class CustomerService {
 
     @Autowired
     private AuditLogRepository auditLogRepository;
-
-    public List<Customer> getAllCustomers() {
-        return customerRepository.findAll();
-    }
     
-    public Customer getCustomerById(Long id) {
-    	return customerRepository.findById(id).orElse(null);
+    @Autowired
+    private PropertyTypeRepository propertyTypeRepository;
+    
+    @Autowired
+    private CustomerPropertyRepository customerPropertyRepository;
+
+    public List<CustomerWithAdditionalProperties> getAllCustomers() {
+        List<Customer> customers = customerRepository.findAll();
+
+        Map<Long, PropertyType> propertyTypeMap = propertyTypeRepository.findAll().stream()
+                .collect(Collectors.toMap(PropertyType::getId, Function.identity()));
+
+        Map<Long, Map<PropertyType, Object>> customerPropertiesMap = customerPropertyRepository.findAll().stream()
+                .collect(Collectors.groupingBy(
+                        CustomerProperty::getId,
+                        Collectors.toMap(
+                                cp -> propertyTypeMap.get(cp.getPropertyType().getId()),
+                                CustomerProperty::getValue
+                        )
+                ));
+
+        List<CustomerWithAdditionalProperties> result = new ArrayList<>();
+
+        for (Customer customer : customers) {
+            Map<PropertyType, Object> properties = new HashMap<>();
+
+            propertyTypeMap.values().forEach(type -> properties.put(type, null));
+
+            if (customerPropertiesMap.containsKey(customer.getId())) {
+                properties.putAll(customerPropertiesMap.get(customer.getId()));
+            }
+
+            result.add(new CustomerWithAdditionalProperties(
+                    customer.getId(),
+                    customer.getName(),
+                    customer.getRegistrationDate(),
+                    customer.getEmail(),
+                    customer.getPhone(),
+                    new HashMap<>(properties)
+            ));
+        }
+
+        return result;
     }
+
+    
+    public CustomerWithAdditionalProperties getCustomerById(Long id) {
+        
+        Customer customer = customerRepository.findById(id).orElse(null);
+        if (customer == null) {
+            return null;
+        }
+
+        Map<Long, PropertyType> propertyTypeMap = propertyTypeRepository.findAll().stream()
+                .collect(Collectors.toMap(PropertyType::getId, Function.identity()));
+        
+        Map<PropertyType, Object> properties = customerPropertyRepository.findById(id).stream()
+                .collect(Collectors.toMap(
+                        cp -> propertyTypeMap.get(cp.getPropertyType().getId()),
+                        CustomerProperty::getValue
+                ));
+
+        propertyTypeMap.values().forEach(type -> properties.putIfAbsent(type, null));
+
+        return new CustomerWithAdditionalProperties(
+                customer.getId(),
+                customer.getName(),
+                customer.getRegistrationDate(),
+                customer.getEmail(),
+                customer.getPhone(),
+                new HashMap<>(properties)
+        );
+    }
+
 
     @Transactional
     public Customer createCustomer(Customer customer) {

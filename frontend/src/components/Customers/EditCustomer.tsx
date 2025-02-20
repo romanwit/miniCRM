@@ -28,6 +28,12 @@ const EditCustomer: React.FC<EditCustomerProps> = ({ onCustomerUpdated }) => {
         });
         if (!response.ok) throw new Error('Failed to fetch customer data');
         const data: Customer = await response.json();
+        console.log(data.properties);
+        if (data.properties /*&& data.properties instanceof Map*/) {
+          console.log("gotcha");
+        } else {
+          console.log("nope");
+        }
         setCustomer(data);
       } catch (err) {
         setError((err as Error).message);
@@ -38,12 +44,32 @@ const EditCustomer: React.FC<EditCustomerProps> = ({ onCustomerUpdated }) => {
     fetchCustomer();
   }, [customerId]);
 
+  function isProperty(value: unknown): value is Property {
+    return (value as Property).id !== undefined;
+  }
+
   const handlePropertyChange = (event: React.ChangeEvent<HTMLInputElement>, propertyId: number) => {
-    if (!customer) return;
-    const updatedProperties = customer.properties.map((prop) =>
-      prop.id === propertyId ? { ...prop, value: event.target.value } : prop
-    );
-    setCustomer({ ...customer, properties: updatedProperties });
+    
+    const updateProperty = (propertyId: number, newValue: string) => {
+      if (!customer) return;  
+    
+      const updatedProperties = new Map(customer.properties);
+    
+      updatedProperties.forEach((value, key) => {
+        if (isProperty(key) && key.id === propertyId) {
+          updatedProperties.set(key, newValue);
+        }
+      });
+    
+      setCustomer({
+        ...customer,
+        properties: updatedProperties
+      });
+    };
+
+    updateProperty(propertyId, event.target.value);
+    
+    
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -88,12 +114,26 @@ const EditCustomer: React.FC<EditCustomerProps> = ({ onCustomerUpdated }) => {
         <input type="tel" value={customer.phone} onChange={(e) => setCustomer({ ...customer, phone: e.target.value })} />
       </div>
       <h3>Properties</h3>
-      {customer.properties?.map((prop) => (
-        <div key={prop.id}>
-          <label>{prop.type}</label>
-          <input type="text" value={prop.value} onChange={(e) => handlePropertyChange(e, prop.id)} />
-        </div>
-      ))??[]}
+      {
+        //customer.properties && customer.properties instanceof Map ? (
+        customer.properties ? (
+          //Array.from(customer.properties).map(([key, value]) => (
+          Object.entries(customer.properties).map(([key, value]) => (
+          //customer.properties.forEach(([key, value]) => (
+            <div key={key/*.id*/}>
+              <label>{typeof (customer.properties as Map<Property, unknown>)/*key.type*/}</label>
+              <input
+                type="text"
+                value={value as string} 
+                onChange={(e) => handlePropertyChange(e, 1/*key.id*/)}
+              />
+            </div>
+          ))
+        ) : (
+          <div></div> 
+        )
+    }
+
       <button type="submit">Update Customer</button>
     </form>
   );

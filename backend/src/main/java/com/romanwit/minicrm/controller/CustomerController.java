@@ -1,5 +1,6 @@
 package com.romanwit.minicrm.controller;
 
+import com.romanwit.minicrm.dto.CustomerWithAdditionalProperties;
 import com.romanwit.minicrm.model.Customer;
 import com.romanwit.minicrm.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +19,13 @@ public class CustomerController {
     private CustomerService customerService;
 
     @GetMapping
-    public List<Customer> getAllCustomers() {
+    public List<CustomerWithAdditionalProperties> getAllCustomers() {
         return customerService.getAllCustomers();
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<Customer> getCustomersById(@PathVariable Long id) {
-    	Customer customer = customerService.getCustomerById(id);
+    public ResponseEntity<CustomerWithAdditionalProperties> getCustomersById(@PathVariable Long id) {
+    	CustomerWithAdditionalProperties customer = customerService.getCustomerById(id);
         return (customer != null) ? ResponseEntity.ok(customer) : ResponseEntity.notFound().build();
     }
 
