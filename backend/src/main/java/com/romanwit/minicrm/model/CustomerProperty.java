@@ -30,12 +30,12 @@ public class CustomerProperty implements Serializable {
         this.id = id;
     }
 
-    public Customer getClient() {
+    public Customer getCustomer() {
         return customer;
     }
 
-    public void setClient(Customer client) {
-        this.customer = client;
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 
     public PropertyType getPropertyType() {
