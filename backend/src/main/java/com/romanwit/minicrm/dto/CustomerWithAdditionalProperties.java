@@ -13,11 +13,11 @@ public class CustomerWithAdditionalProperties {
     private LocalDateTime registrationDate;
     private String email;
     private String phone;
-    private HashMap<PropertyType, Object> properties;
+    private HashMap<Long, Object> properties;
 
     public CustomerWithAdditionalProperties() {}
 
-    public CustomerWithAdditionalProperties(long id, String name, LocalDateTime registrationDate, String email, String phone, HashMap<PropertyType, Object> properties) {
+    public CustomerWithAdditionalProperties(long id, String name, LocalDateTime registrationDate, String email, String phone, HashMap<Long, Object> properties) {
         this.id = id;
         this.name = name;
         this.registrationDate = registrationDate;
@@ -67,19 +67,19 @@ public class CustomerWithAdditionalProperties {
         this.phone = phone;
     }
 
-    public HashMap<PropertyType, Object> getProperties() {
+    public HashMap<Long, Object> getProperties() {
         return properties;
     }
 
-    public void setProperties(HashMap<PropertyType, Object> properties) {
+    public void setProperties(HashMap<Long, Object> properties) {
         this.properties = properties;
     }
 
-    public void addProperty(PropertyType propertyType, Object value) {
+    public void addProperty(Long propertyTypeId, Object value) {
         if (properties == null) {
             properties = new HashMap<>();
         }
-        properties.put(propertyType, value);
+        properties.put(propertyTypeId, value);
     }
 
     public Object getProperty(PropertyType propertyType) {

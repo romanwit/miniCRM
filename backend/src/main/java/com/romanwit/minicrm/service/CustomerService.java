@@ -44,11 +44,11 @@ public class CustomerService {
         Map<Long, PropertyType> propertyTypeMap = propertyTypeRepository.findAll().stream()
                 .collect(Collectors.toMap(PropertyType::getId, Function.identity()));
 
-        Map<Long, Map<PropertyType, Object>> customerPropertiesMap = customerPropertyRepository.findAll().stream()
+        Map<Long, Map<Long, Object>> customerPropertiesMap = customerPropertyRepository.findAll().stream()
                 .collect(Collectors.groupingBy(
                         cp->cp.getCustomer().getId(), 
                         Collectors.toMap(
-                                cp -> propertyTypeMap.get(cp.getPropertyType().getId()),
+                                cp -> propertyTypeMap.get(cp.getPropertyType().getId()).getId(),
                                 CustomerProperty::getValue
                         )
                 ));
@@ -57,9 +57,9 @@ public class CustomerService {
         List<CustomerWithAdditionalProperties> result = new ArrayList<>();
 
         for (Customer customer : customers) {
-            Map<PropertyType, Object> properties = new HashMap<>();
+            Map<Long, Object> properties = new HashMap<>();
 
-            propertyTypeMap.values().forEach(type -> properties.put(type, null));
+            propertyTypeMap.values().forEach(type -> properties.put(type.getId(), null));
 
             if (customerPropertiesMap.containsKey(customer.getId())) {
                 properties.putAll(customerPropertiesMap.get(customer.getId()));
@@ -89,13 +89,13 @@ public class CustomerService {
         Map<Long, PropertyType> propertyTypeMap = propertyTypeRepository.findAll().stream()
                 .collect(Collectors.toMap(PropertyType::getId, Function.identity()));
         
-        Map<PropertyType, Object> properties = customerPropertyRepository.findByCustomerId(id).stream()
+        Map<Long, Object> properties = customerPropertyRepository.findByCustomerId(id).stream()
                 .collect(Collectors.toMap(
-                        cp -> propertyTypeMap.get(cp.getPropertyType().getId()),
+                        cp -> propertyTypeMap.get(cp.getPropertyType().getId()).getId(),
                         CustomerProperty::getValue
                 ));
 
-        propertyTypeMap.values().forEach(type -> properties.putIfAbsent(type, null));
+        propertyTypeMap.values().forEach(type -> properties.putIfAbsent(type.getId(), null));
 
         return new CustomerWithAdditionalProperties(
                 customer.getId(),

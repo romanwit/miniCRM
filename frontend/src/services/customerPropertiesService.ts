@@ -1,6 +1,7 @@
 import { getToken } from './authService';
 import { baseUrl } from './constService';
 
+
 export const getAllProperties = async ():Promise<Property[]> => {
 
     var result: Property[] = [];

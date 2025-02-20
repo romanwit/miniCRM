@@ -1,11 +1,18 @@
 import { getToken } from './authService';
 import { baseUrl } from './constService';
 
-export const getAllPropertyTypes = async ():Promise<PropertyType[]> => {
+export const getPropertyName = async(propertyTypeId: number): Promise<string | undefined> => {
+
+  var properties: Property[] = await getAllProperties();
+  var property = properties.find(property=>property.id==propertyTypeId);
+  return property?.name;
+}
+
+export const getAllProperties = async ():Promise<Property[]> => {
 
     const token = getToken();
 
-    var result: PropertyType[] = [];
+    var result: Property[] = [];
 
     try {
         const response = await fetch(baseUrl + "/api/property-types", {

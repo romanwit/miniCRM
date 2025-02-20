@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { getToken } from '../../services/authService';
 import { baseUrl } from '../../services/constService';
-import { getAllPropertyTypes } from '../../services/propertyTypes';
+import { getAllProperties, getPropertyName } from '../../services/propertyTypesService';
 
 interface EditCustomerProps {
   onCustomerUpdated: (customer: Customer) => void;
@@ -12,11 +12,11 @@ const EditCustomer: React.FC<EditCustomerProps> = ({ onCustomerUpdated }) => {
 
   const { id } = useParams<{ id: string }>();
   const customerId = Number(id);
-  var allPropertyTypes: PropertyType[];
 
   const [customer, setCustomer] = useState<Customer | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [allProperties, setAllProperties] = useState<Property[]>([]);
 
   useEffect(() => {
     const fetchCustomer = async () => {
@@ -39,9 +39,9 @@ const EditCustomer: React.FC<EditCustomerProps> = ({ onCustomerUpdated }) => {
         setLoading(false);
       }
 
-      allPropertyTypes = await getAllPropertyTypes();
+      setAllProperties(await getAllProperties());
 
-      console.log(allPropertyTypes);
+      console.log(allProperties);
 
     };
     fetchCustomer();
@@ -124,7 +124,7 @@ const EditCustomer: React.FC<EditCustomerProps> = ({ onCustomerUpdated }) => {
           Object.entries(customer.properties).map(([key, value]) => (
           //customer.properties.forEach(([key, value]) => (
             <div key={key/*.id*/}>
-              <label>{/*key.type*/}</label>
+              <label>{allProperties.find(p=>p.id==Number(key))?.name/*key.type*/}&nbsp;</label>
               <input
                 type="text"
                 value={value as string} 
