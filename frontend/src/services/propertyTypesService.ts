@@ -1,7 +1,32 @@
 import { getToken } from './authService';
 import { baseUrl } from './constService';
 
-export const getPropertyName = async(propertyTypeId: number): Promise<string | undefined> => {
+enum PropertyType {
+  STRING = "STRING",
+  DATE = "DATE",
+  NUMBER = "NUMBER",
+  FIXED_LIST = "FIXED_LIST"
+}
+
+export const getInputType = (propertyType?: PropertyType): string => {
+  if (!propertyType) return 'text';
+  switch (propertyType) {
+    case PropertyType.STRING:
+      return 'text';
+      break;
+    case PropertyType.DATE: 
+      return 'date';
+      break;
+    case PropertyType.NUMBER:
+      return 'number';
+      break;
+    default:
+      return 'text';
+      break;
+  }
+}
+
+export const getPropertyName = async (propertyTypeId: number): Promise<string | undefined> => {
 
   var properties: Property[] = await getAllProperties();
   var property = properties.find(property=>property.id==propertyTypeId);

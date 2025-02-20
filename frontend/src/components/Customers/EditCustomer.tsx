@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { getToken } from '../../services/authService';
 import { baseUrl } from '../../services/constService';
-import { getAllProperties, getPropertyName } from '../../services/propertyTypesService';
+import { getAllProperties, getPropertyName, getInputType } from '../../services/propertyTypesService';
 
 interface EditCustomerProps {
   onCustomerUpdated: (customer: Customer) => void;
@@ -30,8 +30,6 @@ const EditCustomer: React.FC<EditCustomerProps> = ({ onCustomerUpdated }) => {
         });
         if (!response.ok) throw new Error('Failed to fetch customer data');
         const data: Customer = await response.json();
-        console.log(data.properties);
-        console.log(`size ${Object.entries(data.properties).length}`);
         setCustomer(data);
       } catch (err) {
         setError((err as Error).message);
@@ -40,8 +38,6 @@ const EditCustomer: React.FC<EditCustomerProps> = ({ onCustomerUpdated }) => {
       }
 
       setAllProperties(await getAllProperties());
-
-      console.log(allProperties);
 
     };
     fetchCustomer();
@@ -118,24 +114,21 @@ const EditCustomer: React.FC<EditCustomerProps> = ({ onCustomerUpdated }) => {
       </div>
       {customer.properties && Object.entries(customer.properties).length > 0 && <h3>Properties</h3>}
       {
-        //customer.properties && customer.properties instanceof Map ? (
         customer.properties ? (
-          //Array.from(customer.properties).map(([key, value]) => (
           Object.entries(customer.properties).map(([key, value]) => (
-          //customer.properties.forEach(([key, value]) => (
-            <div key={key/*.id*/}>
-              <label>{allProperties.find(p=>p.id==Number(key))?.name/*key.type*/}&nbsp;</label>
+            <div key={key}>
+              <label>{allProperties.find(p=>p.id==Number(key))?.name}&nbsp;</label>
               <input
-                type="text"
+                type={getInputType(allProperties.find(p=>p.id == Number(key))?.type)}
                 value={value as string} 
-                onChange={(e) => handlePropertyChange(e, 1/*key.id*/)}
+                onChange={(e) => handlePropertyChange(e, Number(key))}
               />
             </div>
           ))
         ) : (
           <div></div> 
         )
-    }
+      }
 
       <button type="submit">Update Customer</button>
     </form>
