@@ -23,6 +23,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class CustomerService {
+	
+	private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(CustomerService.class); 
 
     @Autowired
     private CustomerRepository customerRepository;
@@ -44,12 +46,13 @@ public class CustomerService {
 
         Map<Long, Map<PropertyType, Object>> customerPropertiesMap = customerPropertyRepository.findAll().stream()
                 .collect(Collectors.groupingBy(
-                        CustomerProperty::getId,
+                        cp->cp.getCustomer().getId(), 
                         Collectors.toMap(
                                 cp -> propertyTypeMap.get(cp.getPropertyType().getId()),
                                 CustomerProperty::getValue
                         )
                 ));
+        //logger.info(customerPropertiesMap.toString());
 
         List<CustomerWithAdditionalProperties> result = new ArrayList<>();
 
@@ -86,7 +89,7 @@ public class CustomerService {
         Map<Long, PropertyType> propertyTypeMap = propertyTypeRepository.findAll().stream()
                 .collect(Collectors.toMap(PropertyType::getId, Function.identity()));
         
-        Map<PropertyType, Object> properties = customerPropertyRepository.findById(id).stream()
+        Map<PropertyType, Object> properties = customerPropertyRepository.findByCustomerId(id).stream()
                 .collect(Collectors.toMap(
                         cp -> propertyTypeMap.get(cp.getPropertyType().getId()),
                         CustomerProperty::getValue
