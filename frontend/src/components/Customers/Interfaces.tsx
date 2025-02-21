@@ -17,5 +17,5 @@ interface Customer {
   registrationDate: string;
   email: string;
   phone: string;
-  properties: Map<Property, unknown>;
+  properties: Map<string, unknown>;
 }

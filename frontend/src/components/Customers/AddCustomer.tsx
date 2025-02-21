@@ -13,7 +13,7 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onCustomerAdded }) => {
     event.preventDefault();
     const newCustomer: Customer = {
       id: Date.now(), name, registrationDate: new Date().toISOString(), email, phone,
-      properties: []
+      properties: new Map<string, unknown>()
     };
     onCustomerAdded(newCustomer);
   };
