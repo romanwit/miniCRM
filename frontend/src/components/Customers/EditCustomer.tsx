@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { getToken } from '../../services/authService';
 import { baseUrl } from '../../services/constService';
-import { getAllProperties, getPropertyName, getInputType } from '../../services/propertyTypesService';
+import { getAllProperties, getInputType, getDefaultValue } from '../../services/propertyTypesService';
 
 interface EditCustomerProps {
   onCustomerUpdated: (customer: Customer) => void;
@@ -121,7 +121,7 @@ const EditCustomer: React.FC<EditCustomerProps> = ({ onCustomerUpdated }) => {
               <label>{allProperties.find(p=>p.id==Number(key))?.name}&nbsp;</label>
               <input
                 type={getInputType(allProperties.find(p=>p.id == Number(key))?.type)}
-                value={value?value as string:0} 
+                value={value?value as string:getDefaultValue(allProperties.find(p=>p.id == Number(key))?.type)} 
                 onChange={(e) => handlePropertyChange(e, Number(key))}
               />
             </div>

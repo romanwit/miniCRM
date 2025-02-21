@@ -7,7 +7,23 @@ enum PropertyType {
   NUMBER = "NUMBER",
   FIXED_LIST = "FIXED_LIST"
 }
-
+export const getDefaultValue = (propertyType?: PropertyType): string => {
+  if (!propertyType) return '';
+  switch (propertyType) {
+    case PropertyType.STRING:
+      return '';
+      break;
+    case PropertyType.DATE:
+        return (new Date()).toISOString().split('T')[0];
+        break;
+    case PropertyType.NUMBER:
+      return "0";
+      break;
+    default:
+      return '';
+      break;
+  }
+}
 export const getInputType = (propertyType?: PropertyType): string => {
   if (!propertyType) return 'text';
   switch (propertyType) {
