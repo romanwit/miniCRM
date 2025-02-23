@@ -6,12 +6,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/customer-properties")
 @CrossOrigin(origins = "*")
 public class CustomerPropertyController {
+	
+	private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(CustomerPropertyController.class); 
 
     private final CustomerPropertyService customerPropertyService;
 
@@ -42,8 +45,9 @@ public class CustomerPropertyController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CustomerProperty> updateProperty(@PathVariable Long id, @RequestBody CustomerProperty property) {
-        return ResponseEntity.ok(customerPropertyService.updateProperty(id, property));
+    public ResponseEntity<List<CustomerProperty>> updateProperties(@PathVariable Long id, @RequestBody Map<Long, String> properties) {
+        logger.info("propbody received as " + properties.toString() + " size " + properties.size());
+    	return ResponseEntity.ok(customerPropertyService.updateProperties(id, properties));
     }
 
     @DeleteMapping("/{id}")
