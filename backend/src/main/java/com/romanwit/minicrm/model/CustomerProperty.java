@@ -6,8 +6,11 @@ import java.io.Serializable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import lombok.Data;
+
 @Entity
 @Table(name = "customer_properties")
+@Data
 public class CustomerProperty implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,36 +29,4 @@ public class CustomerProperty implements Serializable {
     @Column
     private String value;
 
-    // Getters and Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }
-
-    public PropertyType getPropertyType() {
-        return propertyType;
-    }
-
-    public void setPropertyType(PropertyType propertyType) {
-        this.propertyType = propertyType;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
 }
