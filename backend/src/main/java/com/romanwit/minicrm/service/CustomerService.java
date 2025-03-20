@@ -21,20 +21,22 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.romanwit.minicrm.exception.ExceptionFilter;
+
 @Service
 public class CustomerService {
-	
-	private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(CustomerService.class); 
+
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(CustomerService.class);
 
     @Autowired
     private CustomerRepository customerRepository;
 
     @Autowired
     private AuditLogRepository auditLogRepository;
-    
+
     @Autowired
     private PropertyTypeRepository propertyTypeRepository;
-    
+
     @Autowired
     private CustomerPropertyRepository customerPropertyRepository;
 
@@ -46,13 +48,11 @@ public class CustomerService {
 
         Map<Long, Map<Long, Object>> customerPropertiesMap = customerPropertyRepository.findAll().stream()
                 .collect(Collectors.groupingBy(
-                        cp->cp.getCustomer().getId(), 
+                        cp -> cp.getCustomer().getId(),
                         Collectors.toMap(
                                 cp -> propertyTypeMap.get(cp.getPropertyType().getId()).getId(),
-                                CustomerProperty::getValue
-                        )
-                ));
-        //logger.info(customerPropertiesMap.toString());
+                                CustomerProperty::getValue)));
+        // logger.info(customerPropertiesMap.toString());
 
         List<CustomerWithAdditionalProperties> result = new ArrayList<>();
 
@@ -71,16 +71,14 @@ public class CustomerService {
                     customer.getRegistrationDate(),
                     customer.getEmail(),
                     customer.getPhone(),
-                    new HashMap<>(properties)
-            ));
+                    new HashMap<>(properties)));
         }
 
         return result;
     }
 
-    
     public CustomerWithAdditionalProperties getCustomerById(Long id) {
-        
+
         Customer customer = customerRepository.findById(id).orElse(null);
         if (customer == null) {
             return null;
@@ -88,12 +86,11 @@ public class CustomerService {
 
         Map<Long, PropertyType> propertyTypeMap = propertyTypeRepository.findAll().stream()
                 .collect(Collectors.toMap(PropertyType::getId, Function.identity()));
-        
+
         Map<Long, Object> properties = customerPropertyRepository.findByCustomerId(id).stream()
                 .collect(Collectors.toMap(
                         cp -> propertyTypeMap.get(cp.getPropertyType().getId()).getId(),
-                        CustomerProperty::getValue
-                ));
+                        CustomerProperty::getValue));
 
         propertyTypeMap.values().forEach(type -> properties.putIfAbsent(type.getId(), null));
 
@@ -103,14 +100,16 @@ public class CustomerService {
                 customer.getRegistrationDate(),
                 customer.getEmail(),
                 customer.getPhone(),
-                new HashMap<>(properties)
-        );
+                new HashMap<>(properties));
     }
-
 
     @Transactional
     public Customer createCustomer(Customer customer) {
-    	Customer savedCustomer = customerRepository.save(customer);
+        if (customerRepository.existsByName(customer.getName())) {
+            throw new ExceptionFilter.ResourceAlreadyExistsException(customer.getName() +
+                    " already exists");
+        }
+        Customer savedCustomer = customerRepository.save(customer);
         logAction("Customer", savedCustomer.getId(), "CREATE", null, savedCustomer.toString());
         return savedCustomer;
     }
@@ -119,8 +118,8 @@ public class CustomerService {
     public Customer updateCustomer(Customer customer) {
         Optional<Customer> existing = customerRepository.findById(customer.getId());
         if (existing.isPresent()) {
-        	Customer oldCustomer = existing.get();
-        	Customer updatedCustomer = customerRepository.save(customer);
+            Customer oldCustomer = existing.get();
+            Customer updatedCustomer = customerRepository.save(customer);
             logAction("Client", updatedCustomer.getId(), "UPDATE", oldCustomer.toString(), updatedCustomer.toString());
             return updatedCustomer;
         }
@@ -131,7 +130,7 @@ public class CustomerService {
     public void deleteCustomer(Long customerId) {
         Optional<Customer> existing = customerRepository.findById(customerId);
         if (existing.isPresent()) {
-        	Customer customer = existing.get();
+            Customer customer = existing.get();
             customerRepository.delete(customer);
             logAction("Customer", customerId, "DELETE", customer.toString(), null);
         } else {
@@ -149,4 +148,3 @@ public class CustomerService {
         auditLogRepository.save(log);
     }
 }
-
