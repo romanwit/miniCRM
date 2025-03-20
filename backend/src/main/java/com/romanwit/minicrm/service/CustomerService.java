@@ -123,7 +123,8 @@ public class CustomerService {
             logAction("Client", updatedCustomer.getId(), "UPDATE", oldCustomer.toString(), updatedCustomer.toString());
             return updatedCustomer;
         }
-        throw new IllegalArgumentException("Client not found");
+        throw new ExceptionFilter.ResourceNotFoundException("Customer with id " +
+                customer.getId() + " not found");
     }
 
     @Transactional
@@ -134,7 +135,8 @@ public class CustomerService {
             customerRepository.delete(customer);
             logAction("Customer", customerId, "DELETE", customer.toString(), null);
         } else {
-            throw new IllegalArgumentException("Customer not found");
+            throw new ExceptionFilter.ResourceNotFoundException("Customer with id " +
+                    customerId + " not found");
         }
     }
 
