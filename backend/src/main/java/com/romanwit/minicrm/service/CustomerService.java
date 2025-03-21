@@ -40,30 +40,46 @@ public class CustomerService {
     @Autowired
     private CustomerPropertyRepository customerPropertyRepository;
 
+    private Map<Long, Object> getCustomerProperties(Long customerId, Map<Long, PropertyType> propertyTypeMap) {
+        Map<Long, Object> properties = new HashMap<>();
+        propertyTypeMap.values().forEach(type -> properties.put(type.getId(), null));
+        customerPropertyRepository.findByCustomerId(customerId)
+                .forEach(cp -> properties.put(cp.getPropertyType().getId(), cp.getValue()));
+        return properties;
+    }
+
     public List<CustomerWithAdditionalProperties> getAllCustomers() {
+
+        List<CustomerWithAdditionalProperties> result = new ArrayList<>();
+
         List<Customer> customers = customerRepository.findAll();
 
         Map<Long, PropertyType> propertyTypeMap = propertyTypeRepository.findAll().stream()
                 .collect(Collectors.toMap(PropertyType::getId, Function.identity()));
 
-        Map<Long, Map<Long, Object>> customerPropertiesMap = customerPropertyRepository.findAll().stream()
-                .collect(Collectors.groupingBy(
-                        cp -> cp.getCustomer().getId(),
-                        Collectors.toMap(
-                                cp -> propertyTypeMap.get(cp.getPropertyType().getId()).getId(),
-                                CustomerProperty::getValue)));
-        // logger.info(customerPropertiesMap.toString());
-
-        List<CustomerWithAdditionalProperties> result = new ArrayList<>();
-
+        /*
+         * Map<Long, Map<Long, Object>> customerPropertiesMap =
+         * customerPropertyRepository.findAll().stream()
+         * .collect(Collectors.groupingBy(
+         * cp -> cp.getCustomer().getId(),
+         * Collectors.toMap(
+         * cp -> propertyTypeMap.get(cp.getPropertyType().getId()).getId(),
+         * CustomerProperty::getValue)));
+         * 
+         * List<CustomerWithAdditionalProperties> result = new ArrayList<>();
+         */
         for (Customer customer : customers) {
-            Map<Long, Object> properties = new HashMap<>();
+            /*
+             * Map<Long, Object> properties = new HashMap<>();
+             * 
+             * propertyTypeMap.values().forEach(type -> properties.put(type.getId(), null));
+             * 
+             * if (customerPropertiesMap.containsKey(customer.getId())) {
+             * properties.putAll(customerPropertiesMap.get(customer.getId()));
+             * }
+             */
 
-            propertyTypeMap.values().forEach(type -> properties.put(type.getId(), null));
-
-            if (customerPropertiesMap.containsKey(customer.getId())) {
-                properties.putAll(customerPropertiesMap.get(customer.getId()));
-            }
+            Map<Long, Object> properties = getCustomerProperties(customer.getId(), propertyTypeMap);
 
             result.add(new CustomerWithAdditionalProperties(
                     customer.getId(),
@@ -79,10 +95,9 @@ public class CustomerService {
 
     public CustomerWithAdditionalProperties getCustomerById(Long id) {
 
-        Customer customer = customerRepository.findById(id).orElse(null);
-        if (customer == null) {
-            return null;
-        }
+        Customer customer = customerRepository.findById(id).orElseThrow(
+                () -> new ExceptionFilter.ResourceNotFoundException(
+                        "Customer with id " + id + " not found"));
 
         Map<Long, PropertyType> propertyTypeMap = propertyTypeRepository.findAll().stream()
                 .collect(Collectors.toMap(PropertyType::getId, Function.identity()));
@@ -119,6 +134,11 @@ public class CustomerService {
         Optional<Customer> existing = customerRepository.findById(customer.getId());
         if (existing.isPresent()) {
             Customer oldCustomer = existing.get();
+            if (!oldCustomer.getName().equals(customer.getName()) &&
+                    customerRepository.existsByName(customer.getName())) {
+                throw new ExceptionFilter.ResourceAlreadyExistsException(
+                        "Customer with name " + customer.getName() + " already exists");
+            }
             Customer updatedCustomer = customerRepository.save(customer);
             logAction("Client", updatedCustomer.getId(), "UPDATE", oldCustomer.toString(), updatedCustomer.toString());
             return updatedCustomer;

@@ -14,6 +14,8 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.dao.DataIntegrityViolationException;
+
 @ControllerAdvice
 public class ExceptionFilter extends ResponseEntityExceptionHandler {
 
@@ -21,9 +23,9 @@ public class ExceptionFilter extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleAllExceptions(Exception ex, WebRequest request) {
-        
-        logger.info("Server exception caught");
-        
+
+        logger.info("Server exception caught with " + ex.getMessage());
+
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", LocalDateTime.now());
         body.put("message", "Server error");
@@ -51,12 +53,12 @@ public class ExceptionFilter extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(ResourceAlreadyExistsException.class)
-            
-            
-    public ResponseEntity<Object> handleResourceAlreadyExistsException(ResourceAlreadyExistsException ex, WebRequest request) {
-        
+
+    public ResponseEntity<Object> handleResourceAlreadyExistsException(ResourceAlreadyExistsException ex,
+            WebRequest request) {
+
         logger.info("Resource already exists caught");
-        
+
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", LocalDateTime.now());
         body.put("message", "Resource already exists");
@@ -118,5 +120,18 @@ public class ExceptionFilter extends ResponseEntityExceptionHandler {
         public ForbiddenException(String message) {
             super(message);
         }
+    }
+
+            
+            
+            
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<Object> handleDataIntegrityViolationException(DataIntegrityViolationException ex, WebRequest request) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("message", "Data integrity violation");
+        body.put("details", "Possible violation of uniquness");
+        body.put("path", request.getDescription(false));
+        return new ResponseEntity<>(body, HttpStatus.CONFLICT);
     }
 }
