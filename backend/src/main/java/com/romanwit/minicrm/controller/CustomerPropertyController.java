@@ -4,6 +4,7 @@ import com.romanwit.minicrm.model.CustomerProperty;
 import com.romanwit.minicrm.service.CustomerPropertyService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
 
 import java.util.List;
 import java.util.Map;
@@ -13,8 +14,8 @@ import java.util.Optional;
 @RequestMapping("/api/customer-properties")
 @CrossOrigin(origins = "*")
 public class CustomerPropertyController {
-	
-	private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(CustomerPropertyController.class); 
+
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(CustomerPropertyController.class);
 
     private final CustomerPropertyService customerPropertyService;
 
@@ -29,9 +30,7 @@ public class CustomerPropertyController {
 
     @GetMapping("/{id}")
     public ResponseEntity<CustomerProperty> getPropertyById(@PathVariable Long id) {
-        Optional<CustomerProperty> property = customerPropertyService.getPropertyById(id);
-        return property.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        return ResponseEntity.ok(customerPropertyService.getPropertyById(id));
     }
 
     @GetMapping("/customer/{customerId}")
@@ -41,13 +40,14 @@ public class CustomerPropertyController {
 
     @PostMapping
     public ResponseEntity<CustomerProperty> createProperty(@RequestBody CustomerProperty property) {
-        return ResponseEntity.ok(customerPropertyService.createProperty(property));
+        return ResponseEntity.status(HttpStatus.CREATED).body(customerPropertyService.createProperty(property));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<List<CustomerProperty>> updateProperties(@PathVariable Long id, @RequestBody Map<Long, String> properties) {
+    public ResponseEntity<List<CustomerProperty>> updateProperties(@PathVariable Long id,
+            @RequestBody Map<Long, String> properties) {
         logger.info("propbody received as " + properties.toString() + " size " + properties.size());
-    	return ResponseEntity.ok(customerPropertyService.updateProperties(id, properties));
+        return ResponseEntity.ok(customerPropertyService.updateProperties(id, properties));
     }
 
     @DeleteMapping("/{id}")

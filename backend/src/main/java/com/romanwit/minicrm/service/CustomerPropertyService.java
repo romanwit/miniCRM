@@ -16,25 +16,26 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.romanwit.minicrm.exception.ExceptionFilter;
+
 @Service
 public class CustomerPropertyService {
-	
-	private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(CustomerPropertyService.class); 
 
-	@Autowired
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(CustomerPropertyService.class);
+
+    @Autowired
     private final CustomerPropertyRepository customerPropertyRepository;
-	
-	@Autowired
-	private final CustomerRepository customerRepository;
-	
-	@Autowired
-	private final PropertyTypeRepository propertyTypeRepository;
+
+    @Autowired
+    private final CustomerRepository customerRepository;
+
+    @Autowired
+    private final PropertyTypeRepository propertyTypeRepository;
 
     public CustomerPropertyService(
-    		CustomerPropertyRepository customerPropertyRepository, 
-    		CustomerRepository customerRepository,
-    		PropertyTypeRepository propertyTypeRepository
-    		) {
+            CustomerPropertyRepository customerPropertyRepository,
+            CustomerRepository customerRepository,
+            PropertyTypeRepository propertyTypeRepository) {
         this.customerPropertyRepository = customerPropertyRepository;
         this.customerRepository = customerRepository;
         this.propertyTypeRepository = propertyTypeRepository;
@@ -44,8 +45,10 @@ public class CustomerPropertyService {
         return customerPropertyRepository.findAll();
     }
 
-    public Optional<CustomerProperty> getPropertyById(Long id) {
-        return customerPropertyRepository.findById(id);
+    public CustomerProperty getPropertyById(Long id) {
+        return customerPropertyRepository.findById(id).orElseThrow(
+                () -> new ExceptionFilter.ResourceNotFoundException(
+                        "Property with id " + id + " not found"));
     }
 
     public List<CustomerProperty> getPropertiesByCustomerId(Long customerId) {
@@ -53,28 +56,35 @@ public class CustomerPropertyService {
     }
 
     public CustomerProperty createProperty(CustomerProperty property) {
+        if (property.getCustomer() == null || property.getPropertyType() == null) {
+            throw new ExceptionFilter.InvalidRequestException("Customer and PropertyType are required");
+        }
         return customerPropertyRepository.save(property);
     }
 
     public List<CustomerProperty> updateProperties(Long customerId, Map<Long, String> propertyUpdates) {
-    	
-    	List<CustomerProperty> existingProperties = customerPropertyRepository.findByCustomerId(customerId);
-        
+
+        if (propertyUpdates == null || propertyUpdates.isEmpty()) {
+            throw new ExceptionFilter.InvalidRequestException("Property updates cannot be null or empty");
+        }
+
+        List<CustomerProperty> existingProperties = customerPropertyRepository.findByCustomerId(customerId);
+
         logger.info("existingProperties=" + existingProperties.toString());
 
         Map<Long, CustomerProperty> propertyMap = existingProperties.stream()
                 .collect(Collectors.toMap(
-                		cp->cp.getPropertyType().getId(), 
-                		property -> property));
+                        cp -> cp.getPropertyType().getId(),
+                        property -> property));
 
         List<CustomerProperty> propertiesToUpdate = new ArrayList<>();
         Customer customer = customerRepository.getById(customerId);
         for (Map.Entry<Long, String> update : propertyUpdates.entrySet()) {
             Long propertyId = update.getKey();
             String newValue = update.getValue();
-            
-            logger.info("propertyId="+propertyId+", newValue=" + newValue);
-            
+
+            logger.info("propertyId=" + propertyId + ", newValue=" + newValue);
+
             if (newValue == null) {
                 logger.info("Skipping propertyId=" + propertyId + " due to null value");
                 continue;
@@ -86,7 +96,7 @@ public class CustomerPropertyService {
                 propertiesToUpdate.add(property);
             } else {
                 property = new CustomerProperty();
-                //property.setId(customerId);
+                // property.setId(customerId);
                 property.setCustomer(customer);
                 PropertyType propertyType = propertyTypeRepository.getById(propertyId);
                 property.setPropertyType(propertyType);
@@ -96,16 +106,21 @@ public class CustomerPropertyService {
         }
 
         logger.info("propertiesToUpdate");
-        for (CustomerProperty propertyToUpdate: propertiesToUpdate) {
-        	logger.info("customer=" + propertyToUpdate.getCustomer().getId() + "name=" + propertyToUpdate.getPropertyType().getName() + "value=" + propertyToUpdate.getValue());
-        	customerPropertyRepository.save(propertyToUpdate);
+        for (CustomerProperty propertyToUpdate : propertiesToUpdate) {
+            logger.info("customer=" + propertyToUpdate.getCustomer().getId() + "name="
+                    + propertyToUpdate.getPropertyType().getName() + "value=" + propertyToUpdate.getValue());
+            customerPropertyRepository.save(propertyToUpdate);
         }
-        //customerPropertyRepository.saveAll(propertiesToUpdate);
+        // customerPropertyRepository.saveAll(propertiesToUpdate);
 
         return customerPropertyRepository.findByCustomerId(customerId);
     }
 
     public void deleteProperty(Long id) {
+        if (!customerPropertyRepository.existsById(id)) {
+            throw new ExceptionFilter.ResourceNotFoundException(
+                    "Property with id " + id + " not found");
+        }
         customerPropertyRepository.deleteById(id);
     }
 }
