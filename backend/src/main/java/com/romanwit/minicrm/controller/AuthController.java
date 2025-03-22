@@ -25,8 +25,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @RequestMapping("/api/auth")
 @CrossOrigin(origins = "*")
 public class AuthController {
-	
-	private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(AuthController.class); 
+
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(AuthController.class);
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -40,28 +40,26 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         try {
-        	
-        	logger.info("Attempting to authenticate user: " + loginRequest.getUsername());  
-        	
-        	Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                    loginRequest.getUsername(),
-                    loginRequest.getPassword()
-                )
-            );
+
+            logger.info("Attempting to authenticate user: " + loginRequest.getUsername());
+
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            loginRequest.getUsername(),
+                            loginRequest.getPassword()));
 
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             String token = jwtTokenProvider.generateToken(userDetails);
             return ResponseEntity.ok(new AuthResponse(token));
 
         } catch (BadCredentialsException e) {
-        	 logger.info("Bad credentials"); 
+            logger.info("Bad credentials");
 
             return ResponseEntity.status(401).body("Invalid username or password");
         } catch (DisabledException e) {
             return ResponseEntity.status(403).body("User account is disabled");
         } catch (Exception e) {
-        	logger.error("Authentication failed due to an exception", e);
+            logger.error("Authentication failed due to an exception", e);
             return ResponseEntity.status(500).body("Authentication failed");
         }
     }
