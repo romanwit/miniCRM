@@ -12,6 +12,8 @@ import com.romanwit.minicrm.model.FixedListValue;
 import com.romanwit.minicrm.repository.AuditLogRepository;
 import com.romanwit.minicrm.repository.FixedListValueRepository;
 
+import com.romanwit.minicrm.exception.ExceptionFilter;
+
 @Service
 public class FixedListValueService {
 
@@ -27,6 +29,9 @@ public class FixedListValueService {
 
     @Transactional
     public FixedListValue createValue(FixedListValue value) {
+	if (value.getValue() == null || value.getValue().isBlank()) {
+        	throw new ExceptionFilter.InvalidRequestException("FixedListValue value cannot be empty");
+    	}
         FixedListValue savedValue = fixedListValueRepository.save(value);
         logAction("FixedListValue", savedValue.getId(), "CREATE", null, savedValue.toString());
         return savedValue;
@@ -34,26 +39,21 @@ public class FixedListValueService {
 
     @Transactional
     public FixedListValue updateValue(FixedListValue value) {
-        Optional<FixedListValue> existing = fixedListValueRepository.findById(value.getId());
-        if (existing.isPresent()) {
-            FixedListValue oldValue = existing.get();
-            FixedListValue updatedValue = fixedListValueRepository.save(value);
-            logAction("FixedListValue", updatedValue.getId(), "UPDATE", oldValue.toString(), updatedValue.toString());
-            return updatedValue;
-        }
-        throw new IllegalArgumentException("FixedListValue not found");
+        FixedListValue existing = fixedListValueRepository.findById(value.getId())
+        .orElseThrow(() -> new ExceptionFilter.ResourceNotFoundException(
+            "FixedListValue with id " + value.getId() + " not found"));
+    FixedListValue updatedValue = fixedListValueRepository.save(value);
+    logAction("FixedListValue", updatedValue.getId(), "UPDATE", existing.toString(), updatedValue.toString());
+    return updatedValue;
     }
 
     @Transactional
     public void deleteValue(Long valueId) {
-        Optional<FixedListValue> existing = fixedListValueRepository.findById(valueId);
-        if (existing.isPresent()) {
-            FixedListValue value = existing.get();
-            fixedListValueRepository.delete(value);
-            logAction("FixedListValue", valueId, "DELETE", value.toString(), null);
-        } else {
-            throw new IllegalArgumentException("FixedListValue not found");
-        }
+        FixedListValue value = fixedListValueRepository.findById(valueId)
+        .orElseThrow(() -> new ExceptionFilter.ResourceNotFoundException(
+            "FixedListValue with id " + valueId + " not found"));
+    fixedListValueRepository.delete(value);
+    logAction("FixedListValue", valueId, "DELETE", value.toString(), null);
     }
 
     private void logAction(String entity, Long entityId, String action, String oldValue, String newValue) {
