@@ -20,9 +20,12 @@ const CustomersList: React.FC = () => {
         if (!response.ok) {
             throw new Error(`Error: ${response.status} ${response.statusText}`);
         }
-        const data: Customer[] = await response.json();
-        //console.log(data[0].properties.get);
-        setCustomers(data);
+        const rawData: Customer[] = await response.json();
+        const data: Customer[] = rawData.map((item) => ({
+          ...item,
+          properties: new Map(Object.entries(item.properties)),
+        }));
+        setCustomers(data.sort((a, b) => a.id - b.id));
       }
       catch(error) {
         console.error("Error getting customers:", error);
@@ -31,6 +34,21 @@ const CustomersList: React.FC = () => {
     };
     fetchCustomers();
   }, []);
+
+  function formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+      return dateString; 
+    }
+    const day = String(date.getDate()).padStart(2, "0"); 
+    const months = [
+      "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    ];
+    const month = months[date.getMonth()];
+    const year = date.getFullYear();
+    return `${day} ${month} ${year}`;
+  }
 
   return (
     <div>
@@ -42,7 +60,24 @@ const CustomersList: React.FC = () => {
         key={customer.id}
         onDoubleClick={() => window.location.href = `/customers/edit/${customer.id}`} 
       >
-        {customer.name} - {customer.email}
+        {customer.id} - 
+        {customer.name} - 
+        {customer.email} - 
+        {formatDate(customer.registrationDate)} - 
+        {customer.phone} - 
+        
+         
+          {Array.from(customer.properties.entries()).map(([keyAdditional, value]) => (
+            
+             <label key={"l"+customer.id+keyAdditional}>{keyAdditional}: {String(value)} - </label>
+            
+          ))}
+
+
+        
+      
+        
+      
       </li>
     ))}
       </ul>
