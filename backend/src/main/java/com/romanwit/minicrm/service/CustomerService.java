@@ -90,6 +90,7 @@ public class CustomerService {
                     new HashMap<>(properties)));
         }
 
+        // logger.info(String.valueOf(result));
         return result;
     }
 
