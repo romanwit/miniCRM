@@ -54,33 +54,43 @@ const CustomersList: React.FC = () => {
     <div>
       <h2>Customers List</h2>
       <button onClick={() => window.location.href = '/customers/add'}>Add customer</button> 
-      <ul>
+      <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Registration Date</th>
+        <th>Phone</th>
+        {customers.length > 0 && 
+          Array.from(customers[0].properties.keys()).map((key) => (
+            <th key={key}>{key}</th>
+          ))}
+      </tr>
+    </thead>
+    <tbody>
       {customers.map((customer) => (
-      <li
+      <tr
         key={customer.id}
         onDoubleClick={() => window.location.href = `/customers/edit/${customer.id}`} 
       >
-        {customer.id} - 
-        {customer.name} - 
-        {customer.email} - 
-        {formatDate(customer.registrationDate)} - 
-        {customer.phone} - 
+        <td>{customer.id}</td>
+        <td>{customer.name}</td> 
+        <td>{customer.email}</td>
+        <td>{formatDate(customer.registrationDate)}</td> 
+        <td>{customer.phone}</td>
         
          
           {Array.from(customer.properties.entries()).map(([keyAdditional, value]) => (
             
-             <label key={"l"+customer.id+keyAdditional}>{keyAdditional}: {String(value)} - </label>
+             <td key={"td"+customer.id+keyAdditional}>{keyAdditional}: {String(value)}</td>
             
           ))}
 
-
-        
-      
-        
-      
-      </li>
+      </tr>
     ))}
-      </ul>
+      </tbody>
+      </table>
     </div>
   );
 };
