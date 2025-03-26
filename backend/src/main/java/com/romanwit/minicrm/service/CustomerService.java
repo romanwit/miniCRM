@@ -89,8 +89,6 @@ public class CustomerService {
                     customer.getPhone(),
                     new HashMap<>(properties)));
         }
-
-        // logger.info(String.valueOf(result));
         return result;
     }
 
