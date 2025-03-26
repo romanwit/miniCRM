@@ -15,6 +15,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatusCode;
 
 @ControllerAdvice
 public class ExceptionFilter extends ResponseEntityExceptionHandler {
@@ -122,16 +126,28 @@ public class ExceptionFilter extends ResponseEntityExceptionHandler {
         }
     }
 
-            
-            
-            
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<Object> handleDataIntegrityViolationException(DataIntegrityViolationException ex, WebRequest request) {
+    public ResponseEntity<Object> handleDataIntegrityViolationException(DataIntegrityViolationException ex,
+            WebRequest request) {
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", LocalDateTime.now());
         body.put("message", "Data integrity violation");
         body.put("details", "Possible violation of uniquness");
         body.put("path", request.getDescription(false));
         return new ResponseEntity<>(body, HttpStatus.CONFLICT);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
+            HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        logger.info("Invalid request body caught: " + ex.getMessage());
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("message", "Invalid request body");
+        body.put("details", ex.getMessage().contains("Required request body is missing")
+                ? "Request body is required but missing"
+                : "Request body cannot be parsed");
+        body.put("path", request.getDescription(false));
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 }
