@@ -69,7 +69,6 @@ export const handleCustomerUpdated = async (customer: Customer) => {
     
         const updatedCustomerProperties = await response.json();
         console.log('Customer properites updated successfully:', updatedCustomerProperties);
-        alert('Customer updated successfully!');
         window.location.href = '/customers';
 
     } catch (error) {
