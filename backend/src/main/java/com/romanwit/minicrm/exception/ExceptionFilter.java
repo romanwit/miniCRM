@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.hibernate.exception.ConstraintViolationException;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
@@ -129,12 +130,23 @@ public class ExceptionFilter extends ResponseEntityExceptionHandler {
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<Object> handleDataIntegrityViolationException(DataIntegrityViolationException ex,
             WebRequest request) {
+        logger.info("Data integrity violation caught: " + ex.getMessage());
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", LocalDateTime.now());
-        body.put("message", "Data integrity violation");
-        body.put("details", "Possible violation of uniquness");
         body.put("path", request.getDescription(false));
-        return new ResponseEntity<>(body, HttpStatus.CONFLICT);
+
+        if (ex.getCause() instanceof ConstraintViolationException constraintViolation) {
+            String constraintName = constraintViolation.getConstraintName();
+            if (constraintName != null && constraintName.toLowerCase().contains("unique")) {
+                body.put("message", "Data integrity violation");
+                body.put("details", "Possible violation of uniqueness");
+                return new ResponseEntity<>(body, HttpStatus.CONFLICT);
+            }
+        }
+
+        body.put("message", "Invalid data provided");
+        body.put("details", "Required field is missing or invalid");
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
     @Override
