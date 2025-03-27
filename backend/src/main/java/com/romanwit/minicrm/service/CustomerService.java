@@ -123,7 +123,9 @@ public class CustomerService {
             throw new ExceptionFilter.ResourceAlreadyExistsException(customer.getName() +
                     " already exists");
         }
+        logger.info("created customer was id " + customer.getId());
         Customer savedCustomer = customerRepository.save(customer);
+        logger.info("created customer was assigned id " + savedCustomer.getId());
         logAction("Customer", savedCustomer.getId(), "CREATE", null, savedCustomer.toString());
         return savedCustomer;
     }

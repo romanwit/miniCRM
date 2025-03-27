@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 interface AddCustomerProps {
-  onCustomerAdded: (customer: Customer) => void;
+  onCustomerAdded: (customer: NewCustomer) => void;
 }
 
 const AddCustomer: React.FC<AddCustomerProps> = ({ onCustomerAdded }) => {
@@ -11,8 +11,12 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onCustomerAdded }) => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const newCustomer: Customer = {
-      id: Date.now(), name, registrationDate: new Date().toISOString(), email, phone,
+    const newCustomer: NewCustomer = {
+      //id: Date.now(), 
+      name, 
+      registrationDate: new Date().toISOString(), 
+      email, 
+      phone,
       properties: new Map<string, unknown>()
     };
     onCustomerAdded(newCustomer);

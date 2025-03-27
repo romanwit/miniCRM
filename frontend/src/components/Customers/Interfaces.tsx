@@ -19,3 +19,11 @@ interface Customer {
   phone: string;
   properties: Map<string, unknown>;
 }
+
+interface NewCustomer {
+  name: string;
+  registrationDate: string;
+  email: string;
+  phone: string;
+  properties: Map<string, unknown>;
+}
