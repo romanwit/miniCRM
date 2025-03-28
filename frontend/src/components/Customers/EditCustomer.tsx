@@ -100,6 +100,18 @@ const EditCustomer: React.FC<EditCustomerProps> = ({ onCustomerUpdated }) => {
 
   return (
     <form onSubmit={handleSubmit}>
+      <span 
+      onClick={() => window.location.href = '/customers'}
+      style={{
+        position: 'relative', 
+        left: '300px',
+        top: '-20px',
+        cursor: 'pointer',
+        fontSize: '24px',
+        color: '#757575'
+      }}
+    >x
+    </span>
       <div>
         <label>Name</label>
         <input type="text" value={customer.name} onChange={(e) => setCustomer({ ...customer, name: e.target.value })} />

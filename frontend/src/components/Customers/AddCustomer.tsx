@@ -39,6 +39,18 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onCustomerAdded }) => {
 
   return (
     <>
+    <span 
+      onClick={() => window.location.href = '/customers'}
+      style={{
+        position: 'relative', 
+        left: '340px',
+        top: '30px',
+        cursor: 'pointer',
+        fontSize: '24px',
+        color: '#757575'
+      }}
+    >x
+    </span>
     <form onSubmit={handleSubmit}>
       <div>
         <label>Name</label>&nbsp;
