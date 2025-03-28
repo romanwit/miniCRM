@@ -53,8 +53,6 @@ export const handleCustomerUpdated = async (customer: Customer) => {
         console.error('Error updating Customer:', error);
         alert(`Error updating Customer: ${(error as Error).message}`);
       }
-      console.log('1');
-      console.log(JSON.stringify(Object.fromEntries(customer.properties)));
       try {
         const response = await fetch(baseUrl + `/api/customer-properties/${customer.id}`, {
           method: "PUT",
