@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { AlertColor } from '@mui/material';
 import { SnackBarComponent } from '../SnackBarComponent';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 
 interface AddCustomerProps {
   onCustomerAdded: (customer: NewCustomer) => Promise<void>;
@@ -39,18 +41,18 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onCustomerAdded }) => {
 
   return (
     <>
-    <span 
+    <IconButton 
       onClick={() => window.location.href = '/customers'}
       style={{
         position: 'relative', 
-        left: '340px',
-        top: '30px',
+        left: '320px',
+        top: '40px',
         cursor: 'pointer',
         fontSize: '24px',
         color: '#757575'
       }}
-    >x
-    </span>
+    ><CloseIcon/>
+    </IconButton>
     <form onSubmit={handleSubmit}>
       <div>
         <label>Name</label>&nbsp;
