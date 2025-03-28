@@ -4,10 +4,33 @@ import { baseUrl } from '../../services/constService';
 
 const CustomersList: React.FC = () => {
   const [customers, setCustomers] = useState<Customer[]>([]);
+  const [properties, setProperties] = useState<Property[]>([]);
 
   useEffect(() => {
+    const token = getToken();
+    const fetchPropertyTypes = async () => {
+      try {
+        const response = await fetch(baseUrl + '/api/property-types', 
+          {
+            method: "GET",
+            headers: {
+              "Authorization": `Bearer ${token}`
+            }
+          });
+        if (!response.ok) {
+            throw new Error(`Error: ${response.status} ${response.statusText}`);
+        }
+        const data = await response.json();
+        setProperties(data);
+      }
+      catch(error) {
+        console.error("Error getting properties:", error);
+        return null;
+      }
+    }
+
     const fetchCustomers = async () => {
-      const token = getToken();
+      
       try {
         const response = await fetch(baseUrl + '/api/customers', 
           {
@@ -32,8 +55,20 @@ const CustomersList: React.FC = () => {
         return null;
       }
     };
-    fetchCustomers();
+    const fetchData = async () => {
+      try {
+        await fetchPropertyTypes();
+        await fetchCustomers();
+      } catch(error) {
+        console.error("Error getting data ", error);
+      }
+    }
+    fetchData();
   }, []);
+
+  function getPropertyName(id: number) {
+    return properties.filter(item => item.id === id)[0]?.name;  
+  }
 
   function formatDate(dateString: string): string {
     const date = new Date(dateString);
@@ -64,7 +99,7 @@ const CustomersList: React.FC = () => {
         <th>Phone</th>
         {customers.length > 0 && 
           Array.from(customers[0].properties.keys()).map((key) => (
-            <th key={key}>{key}</th>
+            <th key={key}>{getPropertyName(parseInt(key))}</th>
           ))}
       </tr>
     </thead>
@@ -83,7 +118,7 @@ const CustomersList: React.FC = () => {
          
           {Array.from(customer.properties.entries()).map(([keyAdditional, value]) => (
             
-             <td key={"td"+customer.id+keyAdditional}>{keyAdditional}: {String(value)}</td>
+             <td key={"td"+customer.id+keyAdditional}>{value?.toString() ?? ""}</td>
             
           ))}
 
