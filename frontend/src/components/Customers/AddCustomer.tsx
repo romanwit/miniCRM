@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
+import { AlertColor } from '@mui/material';
+import { SnackBarComponent } from '../SnackBarComponent';
 
 interface AddCustomerProps {
-  onCustomerAdded: (customer: NewCustomer) => void;
+  onCustomerAdded: (customer: NewCustomer) => Promise<void>;
 }
 
 const AddCustomer: React.FC<AddCustomerProps> = ({ onCustomerAdded }) => {
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [phone, setPhone] = useState<string>('');
+  const [snackBar, setSnackBar] = useState<{ message: string; severity: AlertColor } | null>(null);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -19,25 +22,47 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onCustomerAdded }) => {
       phone,
       properties: new Map<string, unknown>()
     };
-    onCustomerAdded(newCustomer);
+
+    try {
+      await onCustomerAdded(newCustomer);
+    } catch(error) {
+      setSnackBar({ 
+        message: error instanceof Error ? error.message : 'Error adding customer', 
+        severity: 'error' 
+      });
+    }
+  };
+
+  const handleSnackBarClose = () => {
+    setSnackBar(null);
   };
 
   return (
+    <>
     <form onSubmit={handleSubmit}>
       <div>
-        <label>Name</label>
+        <label>Name</label>&nbsp;
         <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
       </div>
       <div>
-        <label>Email</label>
+        <label>Email</label>&nbsp;
         <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
       </div>
       <div>
-        <label>Phone</label>
+        <label>Phone</label>&nbsp;
         <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} required />
       </div>
       <button type="submit">Add Customer</button>
     </form>
+    {snackBar && (
+        <SnackBarComponent
+          message={snackBar.message}
+          severity={snackBar.severity}
+          duration={4000}
+          onClose={handleSnackBarClose}
+        />
+      )}
+    </>
   );
 };
 

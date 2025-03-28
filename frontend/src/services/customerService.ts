@@ -1,13 +1,13 @@
 import { getToken } from './authService';
 import { baseUrl } from './constService';
 
-export const handleCustomerAdded = async (newCustomer: Customer) => {
+export const handleCustomerAdded = async (newCustomer: NewCustomer) => {
   const token = getToken();
   if (!token) {
     alert("token not found");
     return;
   }
-  try {
+  
     const response = await fetch(baseUrl + "/api/customers", {
       method: "POST",
       headers: { 
@@ -18,12 +18,9 @@ export const handleCustomerAdded = async (newCustomer: Customer) => {
     });
 
     if (!response.ok) throw new Error("Failed to add customer");
-    //return await response.json();
+
     window.location.href = '/customers';
-  } catch (error) {
-    console.error('Error adding customer:', error);
-    alert("Error adding customer. Please try again.");
-  }
+    
   /*finally {
     setLoading(false);
   }*/
