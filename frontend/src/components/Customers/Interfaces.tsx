@@ -11,6 +11,11 @@ interface Property {
   type: PropertyType;
 }
 
+interface NewProperty {
+  name: string;
+  type: PropertyType;
+}
+
 interface Customer {
   id: number;
   name: string;
