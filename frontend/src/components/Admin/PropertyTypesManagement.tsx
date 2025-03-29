@@ -31,9 +31,15 @@ const PropertyTypesManagement: React.FC = () => {
   return (
     <div>
       <h2>Property Types Management</h2>
+      <button onClick={() => window.location.href = `/admin/addAdditionalProperty/`}>
+        Add additional property
+      </button>
       <ul>
         {propertyTypes.map((type) => (
-          <li key={type.id}>{type.name} - {type.type}</li>
+          <li 
+            key={type.id}
+          >
+              {type.name} - {type.type}</li>
         ))}
       </ul>
     </div>
