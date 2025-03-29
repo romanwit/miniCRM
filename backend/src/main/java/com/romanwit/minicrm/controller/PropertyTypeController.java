@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.http.HttpStatus;
+
 @RestController
 @RequestMapping("/api/property-types")
 @CrossOrigin(origins = "*")
@@ -33,11 +35,12 @@ public class PropertyTypeController {
 
     @PostMapping
     public ResponseEntity<PropertyType> createPropertyType(@RequestBody PropertyType propertyType) {
-        return ResponseEntity.ok(propertyTypeService.createPropertyType(propertyType));
+        return ResponseEntity.status(HttpStatus.CREATED).body(propertyTypeService.createPropertyType(propertyType));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PropertyType> updatePropertyType(@PathVariable Long id, @RequestBody PropertyType propertyType) {
+    public ResponseEntity<PropertyType> updatePropertyType(@PathVariable Long id,
+            @RequestBody PropertyType propertyType) {
         return ResponseEntity.ok(propertyTypeService.updatePropertyType(id, propertyType));
     }
 
