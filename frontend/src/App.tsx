@@ -9,6 +9,8 @@ import AdminDashboard from './components/Admin/AdminDashboard';
 import { handleLogin, handleRegister } from "./services/authService";
 import { handleCustomerAdded, handleCustomerUpdated } from "./services/customerService";
 import './css/Forms.css';
+import AddAdditionalProperty from './components/AdditionalProperties/AddAdditionalProperty';
+import { handleAdditionalPropertyAdded } from './services/propertyTypesService';
 
 const App: React.FC = () => {
   return (
@@ -21,6 +23,7 @@ const App: React.FC = () => {
         <Route path="/customers/add" element={<AddCustomer onCustomerAdded={handleCustomerAdded}/>} />
         <Route path="/customers/edit/:id" element={<EditCustomer onCustomerUpdated={handleCustomerUpdated}/>} />
         <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/admin/addAdditionalProperty" element={<AddAdditionalProperty onAdditionalPropertyAdded={handleAdditionalPropertyAdded} />} />
       </Routes>
     </Router>
   );
