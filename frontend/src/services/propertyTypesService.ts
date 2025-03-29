@@ -7,6 +7,28 @@ enum PropertyType {
   NUMBER = "NUMBER",
   FIXED_LIST = "FIXED_LIST"
 }
+
+export const handleAdditionalPropertyAdded = async (newProperty: NewProperty) => {
+  const token = getToken();
+  if (!token) {
+    alert("token not found");
+    return;
+  }
+  
+    const response = await fetch(baseUrl + "/api/property-types", {
+      method: "POST",
+      headers: { 
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json" 
+      },
+      body: JSON.stringify(newProperty),
+    });
+
+    if (!response.ok) throw new Error("Failed to add additionalProperty");
+
+    window.location.href = '/admin';
+};
+
 export const getDefaultValue = (propertyType?: PropertyType): string => {
   if (!propertyType) return '';
   switch (propertyType) {
