@@ -20,10 +20,6 @@ export const handleCustomerAdded = async (newCustomer: NewCustomer) => {
     if (!response.ok) throw new Error("Failed to add customer");
 
     window.location.href = '/customers';
-    
-  /*finally {
-    setLoading(false);
-  }*/
 };
 
 export const handleCustomerUpdated = async (customer: Customer) => {

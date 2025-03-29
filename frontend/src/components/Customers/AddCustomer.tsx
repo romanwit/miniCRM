@@ -17,7 +17,6 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onCustomerAdded }) => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const newCustomer: NewCustomer = {
-      //id: Date.now(), 
       name, 
       registrationDate: new Date().toISOString(), 
       email, 
