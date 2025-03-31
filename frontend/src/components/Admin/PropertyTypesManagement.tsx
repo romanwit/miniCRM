@@ -35,12 +35,14 @@ const PropertyTypesManagement: React.FC = () => {
         Add additional property
       </button>
       <table>
+        <tbody>
         {propertyTypes.map((type) => (
           <tr 
             key={type.id}
           >
               <td>{type.name}</td><td>{type.type}</td></tr>
         ))}
+        </tbody>
       </table>
     </div>
   );
