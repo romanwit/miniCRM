@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 
 interface AddAdditionalPropertyProps {
     onAdditionalPropertyAdded: (newProperty: NewProperty) => Promise<void>;
@@ -33,6 +35,18 @@ const AddAdditionalProperty: React.FC<AddAdditionalPropertyProps> = ({onAddition
 
     return (
         <>
+        <IconButton 
+            onClick={() => window.location.href = '/admin'}
+            style={{
+                position: 'relative', 
+                left: '320px',
+                top: '40px',
+                cursor: 'pointer',
+                fontSize: '24px',
+                color: '#757575'
+            }}
+        ><CloseIcon/>
+        </IconButton>
         <form onSubmit={handleSubmit}>
             <div>
                 <label>Name</label>&nbsp;
