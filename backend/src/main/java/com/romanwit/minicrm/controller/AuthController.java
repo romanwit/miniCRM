@@ -20,6 +20,9 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.GrantedAuthority;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -49,8 +52,16 @@ public class AuthController {
                             loginRequest.getPassword()));
 
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String role = userDetails.getAuthorities()
+                    .stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .findFirst()
+                    .orElse("No role");
+
+            logger.info("User role {}: {}", loginRequest.getUsername(), role);
+
             String token = jwtTokenProvider.generateToken(userDetails);
-            return ResponseEntity.ok(new AuthResponse(token));
+            return ResponseEntity.ok(new AuthResponse(token, role));
 
         } catch (BadCredentialsException e) {
             logger.info("Bad credentials");

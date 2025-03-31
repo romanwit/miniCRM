@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { getToken } from '../../services/authService';
+import { getToken, getRole } from '../../services/authService';
 import { baseUrl } from '../../services/constService';
+
+const role = getRole();
 
 const CustomersList: React.FC = () => {
   const [customers, setCustomers] = useState<Customer[]>([]);
@@ -87,6 +89,16 @@ const CustomersList: React.FC = () => {
 
   return (
     <div>
+      {role === 'ROLE_ADMIN' && (
+        <div style={{position: 'fixed',
+                top: '10px',
+                width: '50%',
+                textAlign: 'right'}}>
+          <button 
+            onClick={() => window.location.href = '/admin'}
+          >Admin dashboard</button>
+        </div>
+      )}
       <h2>Customers List</h2>
       <button onClick={() => window.location.href = '/customers/add'}>Add customer</button> 
       <table>

@@ -1,6 +1,7 @@
 import { baseUrl } from './constService';
 
 const keyOfToken: string = "auth_token_xyz";
+const keyOfRole: string = "crm_user_role";
 
 export const handleLogin = async (username: string, password: string) => {
   try {
@@ -13,6 +14,7 @@ export const handleLogin = async (username: string, password: string) => {
     if (response.ok) {
       const data = await response.json();
       localStorage.setItem(keyOfToken, data.token);
+      localStorage.setItem(keyOfRole, data.role);
       window.location.href = "/customers";
     } else {
       throw new Error(await response.text());
@@ -51,5 +53,15 @@ export const getToken = (): String | null => {
 export const saveToken = (token: String) => {
   localStorage.setItem(keyOfToken, token.valueOf()); 
   console.log("token saved");
+}
+
+export const getRole = (): String | null => {
+  const role = localStorage.getItem(keyOfRole);
+  return role;
+};
+
+export const saveRole = (token: String) => {
+  localStorage.setItem(keyOfRole, token.valueOf()); 
+  console.log("role saved");
 }
 
