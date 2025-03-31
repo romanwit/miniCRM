@@ -29,6 +29,27 @@ export const handleAdditionalPropertyAdded = async (newProperty: NewProperty) =>
     window.location.href = '/admin';
 };
 
+export const handleAdditionalPropertyEdited = async (id: String, property: NewProperty) => {
+  const token = getToken();
+  if (!token) {
+    alert("token not found");
+    return;
+  }
+  
+    const response = await fetch(baseUrl + `/api/property-types/${id}`, {
+      method: "PUT",
+      headers: { 
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json" 
+      },
+      body: JSON.stringify(property),
+    });
+
+    if (!response.ok) throw new Error("Failed to add additionalProperty");
+
+    window.location.href = '/admin';
+};
+
 export const getDefaultValue = (propertyType?: PropertyType): string => {
   if (!propertyType) return '';
   switch (propertyType) {

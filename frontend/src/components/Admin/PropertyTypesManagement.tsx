@@ -39,6 +39,7 @@ const PropertyTypesManagement: React.FC = () => {
         {propertyTypes.map((type) => (
           <tr 
             key={type.id}
+            onDoubleClick={() => window.location.href = `/admin/editAdditionalProperty/${type.id}`} 
           >
               <td>{type.name}</td><td>{type.type}</td></tr>
         ))}

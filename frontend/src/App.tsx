@@ -10,7 +10,8 @@ import { handleLogin, handleRegister } from "./services/authService";
 import { handleCustomerAdded, handleCustomerUpdated } from "./services/customerService";
 import './css/Forms.css';
 import AddAdditionalProperty from './components/AdditionalProperties/AddAdditionalProperty';
-import { handleAdditionalPropertyAdded } from './services/propertyTypesService';
+import EditAdditionalProperty from './components/AdditionalProperties/EditAdditionalProperty';
+import { handleAdditionalPropertyAdded, handleAdditionalPropertyEdited } from './services/propertyTypesService';
 
 const App: React.FC = () => {
   return (
@@ -24,6 +25,7 @@ const App: React.FC = () => {
         <Route path="/customers/edit/:id" element={<EditCustomer onCustomerUpdated={handleCustomerUpdated}/>} />
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/admin/addAdditionalProperty" element={<AddAdditionalProperty onAdditionalPropertyAdded={handleAdditionalPropertyAdded} />} />
+        <Route path="/admin/editAdditionalProperty/:id" element={<EditAdditionalProperty onAdditionalPropertyEdited={handleAdditionalPropertyEdited} />} />
       </Routes>
     </Router>
   );
