@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
+import { AlertColor } from '@mui/material';
+import { SnackBarComponent } from '../SnackBarComponent';
+
 
 interface AddAdditionalPropertyProps {
     onAdditionalPropertyAdded: (newProperty: NewProperty) => Promise<void>;
@@ -17,6 +20,8 @@ const AddAdditionalProperty: React.FC<AddAdditionalPropertyProps> = ({onAddition
 
     const [name, setName] = useState<string>('');
     const [type, setType] = useState<PropertyType>(PropertyType.STRING);
+    const [snackBar, setSnackBar] = useState<{ message: string; severity: AlertColor } | null>(null);
+    
       
     const propertyTypes = Object.values(PropertyType);
 
@@ -29,9 +34,16 @@ const AddAdditionalProperty: React.FC<AddAdditionalPropertyProps> = ({onAddition
         try {
             await onAdditionalPropertyAdded(newProperty);
         } catch (error) {
-            alert("!");
+            setSnackBar({ 
+                message: error instanceof Error ? error.message : 'Error adding additional property', 
+                severity: 'error' 
+              });
         }
     }
+
+    const handleSnackBarClose = () => {
+        setSnackBar(null);
+      };
 
     return (
         <>
@@ -64,6 +76,14 @@ const AddAdditionalProperty: React.FC<AddAdditionalPropertyProps> = ({onAddition
         </div>
         <button type="submit">Add Additional Property</button>
         </form>
+        {snackBar && (
+                <SnackBarComponent
+                  message={snackBar.message}
+                  severity={snackBar.severity}
+                  duration={4000}
+                  onClose={handleSnackBarClose}
+                />
+              )}
         </>
     );
 };
