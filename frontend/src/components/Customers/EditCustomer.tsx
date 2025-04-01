@@ -58,7 +58,7 @@ const EditCustomer: React.FC<EditCustomerProps> = ({ onCustomerUpdated }) => {
     const updateProperty = (propertyId: number, newValue: string) => {
       if (!customer) return;  
     
-      const updatedProperties = structuredClone(customer.properties);//new Map(Object.entries(customer.properties));
+      const updatedProperties = structuredClone(customer.properties);
     
       updatedProperties.set(String(propertyId), newValue);
       var updatedCustomer: Customer = structuredClone(customer);
@@ -76,24 +76,8 @@ const EditCustomer: React.FC<EditCustomerProps> = ({ onCustomerUpdated }) => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!customer) return;
-    /*const token = getToken();
-    try {
-      const response = await fetch(`http://localhost:8080/api/customers/${clientId}`, {
-        method: 'PUT',
-        headers: { 
-          'Content-Type': 'application/json',
-          "Authorization": `Bearer ${token}` 
-        },
-        body: JSON.stringify(client),
-      });
+    onCustomerUpdated(customer);
 
-      if (!response.ok) throw new Error('Failed to update client');
-
-      const updatedClient: Customer = await response.json();*/
-      onCustomerUpdated(customer);
-    /*} catch (err) {
-      setError((err as Error).message);
-    }*/
   };
 
   if (loading) return <div>Loading...</div>;
@@ -129,7 +113,6 @@ const EditCustomer: React.FC<EditCustomerProps> = ({ onCustomerUpdated }) => {
       {customer.properties && Object.entries(customer.properties).length > 0 && <h3>Properties</h3>}
       {
         customer.properties ? (
-          //Object.entries(customer.properties).map(([key, value]) => (
           [...customer.properties.entries()].map(([key, value]) => (
             <div key={key}>
               <label>{allProperties.find(p=>p.id==Number(key))?.name}&nbsp;</label>
