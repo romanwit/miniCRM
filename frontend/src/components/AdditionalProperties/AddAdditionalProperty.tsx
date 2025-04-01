@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
 import { AlertColor } from '@mui/material';
 import { SnackBarComponent } from '../SnackBarComponent';
+import FormCloseButton from '../Common/FormCloseButton';
 
 
 interface AddAdditionalPropertyProps {
@@ -47,18 +46,7 @@ const AddAdditionalProperty: React.FC<AddAdditionalPropertyProps> = ({onAddition
 
     return (
         <>
-        <IconButton 
-            onClick={() => window.location.href = '/admin'}
-            style={{
-                position: 'relative', 
-                left: '320px',
-                top: '40px',
-                cursor: 'pointer',
-                fontSize: '24px',
-                color: '#757575'
-            }}
-        ><CloseIcon/>
-        </IconButton>
+        <FormCloseButton path='/admin'/>
         <form onSubmit={handleSubmit}>
             <div>
                 <label>Name</label>&nbsp;

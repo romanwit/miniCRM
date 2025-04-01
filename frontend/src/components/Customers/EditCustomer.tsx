@@ -5,6 +5,7 @@ import { baseUrl } from '../../services/constService';
 import { getAllProperties, getInputType, getDefaultValue } from '../../services/propertyTypesService';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
+import FormCloseButton from '../Common/FormCloseButton';
 
 interface EditCustomerProps {
   onCustomerUpdated: (customer: Customer) => void;
@@ -85,19 +86,9 @@ const EditCustomer: React.FC<EditCustomerProps> = ({ onCustomerUpdated }) => {
   if (!customer) return <div>Customer not found</div>;
 
   return (
+    <>
+    <FormCloseButton path='/customers'/>
     <form onSubmit={handleSubmit}>
-      <IconButton 
-      onClick={() => window.location.href = '/customers'}
-      style={{
-        position: 'relative', 
-        left: '150px',
-        top: '-20px',
-        cursor: 'pointer',
-        fontSize: '24px',
-        color: '#757575'
-      }}
-    ><CloseIcon/>
-    </IconButton>
       <div>
         <label>Name</label>
         <input type="text" value={customer.name} onChange={(e) => setCustomer({ ...customer, name: e.target.value })} />
@@ -130,6 +121,7 @@ const EditCustomer: React.FC<EditCustomerProps> = ({ onCustomerUpdated }) => {
 
       <button type="submit">Update Customer</button>
     </form>
+    </>
   );
 };
 

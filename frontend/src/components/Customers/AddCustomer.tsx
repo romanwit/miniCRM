@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { AlertColor } from '@mui/material';
 import { SnackBarComponent } from '../SnackBarComponent';
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
 import { getToken } from '../../services/authService';
 import { baseUrl } from '../../services/constService';
 import { getDefaultValue, getInputType } from '../../services/propertyTypesService';
+import FormCloseButton from '../Common/FormCloseButton';
 
 interface AddCustomerProps {
   onCustomerAdded: (customer: NewCustomer, newProperties: Map<string, unknown>) => Promise<void>;
@@ -90,18 +89,7 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onCustomerAdded }) => {
 
   return (
     <>
-    <IconButton 
-      onClick={() => window.location.href = '/customers'}
-      style={{
-        position: 'relative', 
-        left: '320px',
-        top: '40px',
-        cursor: 'pointer',
-        fontSize: '24px',
-        color: '#757575'
-      }}
-    ><CloseIcon/>
-    </IconButton>
+    <FormCloseButton path='/customers'/>
     <form onSubmit={handleSubmit}>
       <div>
         <label>Name</label>&nbsp;
