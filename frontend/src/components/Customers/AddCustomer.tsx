@@ -1,18 +1,50 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AlertColor } from '@mui/material';
 import { SnackBarComponent } from '../SnackBarComponent';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
+import { getToken } from '../../services/authService';
+import { baseUrl } from '../../services/constService';
+import { getDefaultValue, getInputType } from '../../services/propertyTypesService';
 
 interface AddCustomerProps {
-  onCustomerAdded: (customer: NewCustomer) => Promise<void>;
+  onCustomerAdded: (customer: NewCustomer, newProperties: Map<string, unknown>) => Promise<void>;
 }
 
 const AddCustomer: React.FC<AddCustomerProps> = ({ onCustomerAdded }) => {
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [phone, setPhone] = useState<string>('');
+  const [properties, setProperties] = useState<Property[]>([]);
+  const [propertiesValues, setPropertiesValues] = useState<Map<string, unknown>>(new Map<string, unknown>());
   const [snackBar, setSnackBar] = useState<{ message: string; severity: AlertColor } | null>(null);
+
+
+  useEffect(() => {
+    const fetchProperties = async () => {
+      const token = getToken();
+      try {
+        const response = await fetch(baseUrl + "/api/property-types", {
+          method: 'GET',
+          headers: { 
+            "Authorization": `Bearer ${token}`
+          }
+        });
+        if (!response.ok) throw new Error('Failed to fetch property types data');
+        const data: Property[] = await response.json();
+        setProperties(data);
+        var updatedPropertiesValues = structuredClone(propertiesValues);
+        data.forEach(d=>{
+          updatedPropertiesValues.set(String(d.id), getDefaultValue(d.type));
+        })
+        setPropertiesValues(updatedPropertiesValues);
+      } catch (err) {
+        alert('!')
+      } 
+
+    };
+    fetchProperties();
+  }, []);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -21,11 +53,11 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onCustomerAdded }) => {
       registrationDate: new Date().toISOString(), 
       email, 
       phone,
-      properties: new Map<string, unknown>()
+      properties: propertiesValues
     };
 
     try {
-      await onCustomerAdded(newCustomer);
+      await onCustomerAdded(newCustomer, propertiesValues);
     } catch(error) {
       setSnackBar({ 
         message: error instanceof Error ? error.message : 'Error adding customer', 
@@ -37,6 +69,24 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onCustomerAdded }) => {
   const handleSnackBarClose = () => {
     setSnackBar(null);
   };
+
+  const handlePropertyChange = (event: React.ChangeEvent<HTMLInputElement>, propertyId: number) => {
+      
+      const updateProperty = (propertyId: number, newValue: string) => { 
+      
+        const updatedPropertiesValues = structuredClone(propertiesValues);
+      
+        updatedPropertiesValues.set(String(propertyId), newValue);
+        
+        setPropertiesValues(updatedPropertiesValues);
+  
+      };
+  
+      updateProperty(propertyId, event.target.value);
+      
+      console.log(propertiesValues);
+      
+    };
 
   return (
     <>
@@ -65,6 +115,23 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onCustomerAdded }) => {
         <label>Phone</label>&nbsp;
         <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} required />
       </div>
+      {properties && Object.entries(properties).length > 0 && <h3>Properties</h3>}
+            {
+              properties ? (
+                [...properties.entries()].map(([key, value]) => (
+                  <div key={key}>
+                    <label>{value.name}&nbsp;</label>
+                    <input
+                      type={getInputType(value.type)}
+                      value = {String(propertiesValues.get(String(value.id)))} 
+                      onChange={(e) => handlePropertyChange(e, Number(value.id))}
+                    />
+                  </div>
+                ))
+              ) : (
+                <div></div> 
+              )
+            }
       <button type="submit">Add Customer</button>
     </form>
     {snackBar && (

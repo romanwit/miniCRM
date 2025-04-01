@@ -1,13 +1,17 @@
 import { getToken } from './authService';
 import { baseUrl } from './constService';
 
-export const handleCustomerAdded = async (newCustomer: NewCustomer) => {
+export const handleCustomerAdded = async (newCustomer: NewCustomer, newProperties:Map<string, unknown> ) => {
+  
   const token = getToken();
   if (!token) {
     alert("token not found");
     return;
   }
+
+  var customerId:number;
   
+  const addCustomer = async () => {
     const response = await fetch(baseUrl + "/api/customers", {
       method: "POST",
       headers: { 
@@ -16,8 +20,31 @@ export const handleCustomerAdded = async (newCustomer: NewCustomer) => {
       },
       body: JSON.stringify(newCustomer),
     });
+    if (!response.ok) throw new Error("Failed to add customer"); 
+    const customer:Customer = await response.json() as Customer;
+    customerId = customer.id;
+  }
 
-    if (!response.ok) throw new Error("Failed to add customer");
+  const addNewCustomerProperties = async()=>{
+    
+      const response = await fetch(baseUrl + `/api/customer-properties/${customerId}`, {
+        method: "PUT",
+        headers: { 
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json" 
+        },
+        body: JSON.stringify(Object.fromEntries(newProperties)),
+      });
+  
+      if (!response.ok) throw new Error(`Failed to update customer properties: ${response.statusText}`);
+  
+      const updatedCustomerProperties = await response.json();
+      console.log('Customer properites updated successfully:', updatedCustomerProperties);
+    }
+
+  
+    await addCustomer();
+    await addNewCustomerProperties();
 
     window.location.href = '/customers';
 };
