@@ -68,6 +68,10 @@ public class CustomerPropertyService {
             throw new ExceptionFilter.InvalidRequestException("Property updates cannot be null or empty");
         }
 
+        if (!customerRepository.existsById(customerId)) {
+            throw new ExceptionFilter.ResourceNotFoundException("customerId not exists");
+        }
+
         List<CustomerProperty> existingProperties = customerPropertyRepository.findByCustomerId(customerId);
 
         logger.info("existingProperties=" + existingProperties.toString());
