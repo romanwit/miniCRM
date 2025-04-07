@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getToken, getRole } from '../../services/authService';
-import { baseUrl } from '../../services/constService';
+import { baseUrl, timeout } from '../../services/constService';
 
 const role = getRole();
 
@@ -9,15 +9,23 @@ const CustomersList: React.FC = () => {
   const [properties, setProperties] = useState<Property[]>([]);
 
   useEffect(() => {
+    
+    const controller = new AbortController();
+    const signal = controller.signal;
+
     const token = getToken();
+
     const fetchPropertyTypes = async () => {
+      
       try {
+
         const response = await fetch(baseUrl + '/api/property-types', 
           {
             method: "GET",
             headers: {
               "Authorization": `Bearer ${token}`
-            }
+            },
+            signal,
           });
         if (!response.ok) {
             throw new Error(`Error: ${response.status} ${response.statusText}`);
@@ -40,7 +48,8 @@ const CustomersList: React.FC = () => {
             headers: {
               "Authorization": `Bearer ${token}`,
               "Content-Type": "application/json"
-            }
+            },
+            signal,
           });
         if (!response.ok) {
             throw new Error(`Error: ${response.status} ${response.statusText}`);
@@ -58,6 +67,11 @@ const CustomersList: React.FC = () => {
       }
     };
     const fetchData = async () => {
+      
+      setTimeout(() => {
+        controller.abort(); 
+      }, timeout);
+
       try {
         await fetchPropertyTypes();
         await fetchCustomers();
