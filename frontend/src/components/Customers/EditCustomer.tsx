@@ -3,9 +3,9 @@ import { useParams } from 'react-router-dom';
 import { getToken } from '../../services/authService';
 import { baseUrl } from '../../services/constService';
 import { getAllProperties, getInputType, getDefaultValue } from '../../services/propertyTypesService';
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
 import FormCloseButton from '../Common/FormCloseButton';
+import { SnackBarComponent } from '../SnackBarComponent';
+import { AlertColor } from '@mui/material';
 
 interface EditCustomerProps {
   onCustomerUpdated: (customer: Customer) => void;
@@ -20,6 +20,8 @@ const EditCustomer: React.FC<EditCustomerProps> = ({ onCustomerUpdated }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [allProperties, setAllProperties] = useState<Property[]>([]);
+  const [snackBar, setSnackBar] = useState<{ message: string; severity: AlertColor } | null>(null);
+  
 
   useEffect(() => {
     const fetchCustomer = async () => {
@@ -74,10 +76,21 @@ const EditCustomer: React.FC<EditCustomerProps> = ({ onCustomerUpdated }) => {
     
   };
 
+  const handleSnackBarClose = () => {
+    setSnackBar(null);
+  };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!customer) return;
-    onCustomerUpdated(customer);
+    try {
+      await onCustomerUpdated(customer);
+    } catch(error) {
+      setSnackBar({ 
+        message: error instanceof Error ? error.message : 'Error editing customer', 
+        severity: 'error' 
+      });
+  }
 
   };
 
@@ -121,6 +134,14 @@ const EditCustomer: React.FC<EditCustomerProps> = ({ onCustomerUpdated }) => {
 
       <button type="submit">Update Customer</button>
     </form>
+    {snackBar && (
+            <SnackBarComponent
+              message={snackBar.message}
+              severity={snackBar.severity}
+              duration={4000}
+              onClose={handleSnackBarClose}
+            />
+          )}
     </>
   );
 };
