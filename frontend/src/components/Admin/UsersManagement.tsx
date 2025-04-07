@@ -34,11 +34,15 @@ const UsersManagement: React.FC = () => {
   return (
     <div>
       <h2>Users Management</h2>
-      <ul>
+      <table>
+        <tbody>
         {users.map((user) => (
-          <li key={user.id}>{user.username} - {user.role.name}</li>
+          <tr key={user.id}>
+          <td>{user.username}</td><td>{user.role.name}</td>
+          </tr>
         ))}
-      </ul>
+        </tbody>
+      </table>
     </div>
   );
 };
