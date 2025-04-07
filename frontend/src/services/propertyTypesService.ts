@@ -1,5 +1,5 @@
 import { getToken } from './authService';
-import { baseUrl } from './constService';
+import { baseUrl, timeout } from './constService';
 
 enum PropertyType {
   STRING = "STRING",
@@ -9,11 +9,19 @@ enum PropertyType {
 }
 
 export const handleAdditionalPropertyAdded = async (newProperty: NewProperty) => {
+  
+  const controller = new AbortController();
+  const signal = controller.signal;
+  
   const token = getToken();
   if (!token) {
     alert("token not found");
     return;
   }
+
+  setTimeout(() => {
+    controller.abort(); 
+  }, timeout);
   
     const response = await fetch(baseUrl + "/api/property-types", {
       method: "POST",
@@ -22,6 +30,7 @@ export const handleAdditionalPropertyAdded = async (newProperty: NewProperty) =>
         "Content-Type": "application/json" 
       },
       body: JSON.stringify(newProperty),
+      signal,
     });
 
     if (!response.ok) throw new Error("Failed to add additionalProperty");
@@ -30,12 +39,20 @@ export const handleAdditionalPropertyAdded = async (newProperty: NewProperty) =>
 };
 
 export const handleAdditionalPropertyEdited = async (id: String, property: NewProperty) => {
+  
+  const controller = new AbortController();
+  const signal = controller.signal;
+  
   const token = getToken();
   if (!token) {
     alert("token not found");
     return;
   }
   
+  setTimeout(() => {
+    controller.abort(); 
+  }, timeout);
+
     const response = await fetch(baseUrl + `/api/property-types/${id}`, {
       method: "PUT",
       headers: { 
@@ -43,6 +60,7 @@ export const handleAdditionalPropertyEdited = async (id: String, property: NewPr
         "Content-Type": "application/json" 
       },
       body: JSON.stringify(property),
+      signal,
     });
 
     if (!response.ok) throw new Error("Failed to add additionalProperty");
@@ -94,16 +112,24 @@ export const getPropertyName = async (propertyTypeId: number): Promise<string | 
 
 export const getAllProperties = async ():Promise<Property[]> => {
 
+  const controller = new AbortController();
+  const signal = controller.signal;
+
     const token = getToken();
 
     var result: Property[] = [];
+
+    setTimeout(() => {
+      controller.abort(); 
+    }, timeout);
 
     try {
         const response = await fetch(baseUrl + "/api/property-types", {
           method: "GET",
           headers: { 
             "Authorization": `Bearer ${token}`
-          }
+          },
+          signal
         });
     
         if (!response.ok) throw new Error("Failed to read property types");

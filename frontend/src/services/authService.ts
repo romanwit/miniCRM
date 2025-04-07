@@ -1,14 +1,23 @@
-import { baseUrl } from './constService';
+import { baseUrl, timeout } from './constService';
 
 const keyOfToken: string = "auth_token_xyz";
 const keyOfRole: string = "crm_user_role";
 
 export const handleLogin = async (username: string, password: string) => {
+
+  const controller = new AbortController();
+  const signal = controller.signal;
+
+  setTimeout(() => {
+    controller.abort(); 
+  }, timeout);
+
   try {
     const response = await fetch(baseUrl + "/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),
+      signal,
     });
 
     if (response.ok) {
@@ -25,11 +34,20 @@ export const handleLogin = async (username: string, password: string) => {
 };
 
 export const handleRegister = async (username: string, password: string, email: string) => {
+  
+  const controller = new AbortController();
+  const signal = controller.signal;
+
+  setTimeout(() => {
+    controller.abort(); 
+  }, timeout);
+
   try {
     const response = await fetch(baseUrl + "/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password, email }),
+      signal,
     });
 
     if (response.ok) {

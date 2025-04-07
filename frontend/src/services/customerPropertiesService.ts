@@ -1,21 +1,30 @@
 import { getToken } from './authService';
-import { baseUrl } from './constService';
+import { baseUrl, timeout } from './constService';
 
 
 export const getAllProperties = async ():Promise<Property[]> => {
 
     var result: Property[] = [];
 
+    const controller = new AbortController();
+    const signal = controller.signal;
+
     const token = getToken();
 
     try {
+
+      setTimeout(() => {
+        controller.abort(); 
+      }, timeout);
+      
         const response = await fetch(baseUrl + "/api/customer-properties", {
           method: "GET",
           headers: { 
             "Authorization": `Bearer ${token}`
-          }
+          },
+          signal,
         });
-    
+
         if (!response.ok) throw new Error("Failed to read customer properties");
         result = await response.json();
         
