@@ -3037,158 +3037,6 @@
 							]
 						},
 						{
-							"name": "get All Properties",
-							"request": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "Accept",
-										"value": "*/*"
-									},
-									{
-										"key": "Authorization",
-										"value": "Bearer {{token}}",
-										"type": "text"
-									}
-								],
-								"url": {
-									"raw": "{{baseUrl}}/api/customer-properties",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"api",
-										"customer-properties"
-									]
-								}
-							},
-							"response": [
-								{
-									"name": "OK",
-									"originalRequest": {
-										"method": "GET",
-										"header": [
-											{
-												"key": "Accept",
-												"value": "*/*"
-											}
-										],
-										"url": {
-											"raw": "{{baseUrl}}/api/customer-properties",
-											"host": [
-												"{{baseUrl}}"
-											],
-											"path": [
-												"api",
-												"customer-properties"
-											]
-										}
-									},
-									"status": "OK",
-									"code": 200,
-									"_postman_previewlanguage": "text",
-									"header": [
-										{
-											"key": "Content-Type",
-											"value": "*/*"
-										}
-									],
-									"cookie": [],
-									"body": "[\n  {\n    \"id\": \"<long>\",\n    \"value\": \"<string>\"\n  },\n  {\n    \"id\": \"<long>\",\n    \"value\": \"<string>\"\n  }\n]"
-								}
-							]
-						},
-						{
-							"name": "create Property",
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									},
-									{
-										"key": "Accept",
-										"value": "*/*"
-									},
-									{
-										"key": "Authorization",
-										"value": "Bearer {{token}}",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n  \"name\": \"newProp1\",\n  \"type\": \"NUMBER\"\n}",
-									"options": {
-										"raw": {
-											"headerFamily": "json",
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{baseUrl}}/api/customer-properties",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"api",
-										"customer-properties"
-									]
-								}
-							},
-							"response": [
-								{
-									"name": "OK",
-									"originalRequest": {
-										"method": "POST",
-										"header": [
-											{
-												"key": "Content-Type",
-												"value": "application/json"
-											},
-											{
-												"key": "Accept",
-												"value": "*/*"
-											}
-										],
-										"body": {
-											"mode": "raw",
-											"raw": "{\n  \"id\": \"<long>\",\n  \"value\": \"<string>\"\n}",
-											"options": {
-												"raw": {
-													"headerFamily": "json",
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "{{baseUrl}}/api/customer-properties",
-											"host": [
-												"{{baseUrl}}"
-											],
-											"path": [
-												"api",
-												"customer-properties"
-											]
-										}
-									},
-									"status": "OK",
-									"code": 200,
-									"_postman_previewlanguage": "text",
-									"header": [
-										{
-											"key": "Content-Type",
-											"value": "*/*"
-										}
-									],
-									"cookie": [],
-									"body": "{\n  \"id\": \"<long>\",\n  \"value\": \"<string>\"\n}"
-								}
-							]
-						},
-						{
 							"name": "delete Property",
 							"event": [
 								{
@@ -3306,7 +3154,7 @@
 									"variable": [
 										{
 											"key": "id",
-											"value": "{{propertyId}}",
+											"value": "{{customerPropertyId}}",
 											"description": "(Required) "
 										}
 									]
@@ -3353,53 +3201,20 @@
 									"body": "{\n  \"id\": \"<long>\",\n  \"value\": \"<string>\"\n}"
 								}
 							]
-						}
-					]
-				},
-				{
-					"name": "get Properties By Customer Id",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "*/*"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseUrl}}/api/customer-properties/customer/:customerId",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"customer-properties",
-								"customer",
-								":customerId"
-							],
-							"variable": [
-								{
-									"key": "customerId",
-									"value": "{{customerId}}",
-									"description": "(Required) "
-								}
-							]
-						}
-					},
-					"response": [
+						},
 						{
-							"name": "OK",
-							"originalRequest": {
+							"name": "get Properties By Customer Id",
+							"request": {
 								"method": "GET",
 								"header": [
 									{
 										"key": "Accept",
 										"value": "*/*"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}",
+										"type": "text"
 									}
 								],
 								"url": {
@@ -3415,22 +3230,55 @@
 									],
 									"variable": [
 										{
-											"key": "customerId"
+											"key": "customerId",
+											"value": "{{customerId}}",
+											"description": "(Required) "
 										}
 									]
 								}
 							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "text",
-							"header": [
+							"response": [
 								{
-									"key": "Content-Type",
-									"value": "*/*"
+									"name": "OK",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/customer-properties/customer/:customerId",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"customer-properties",
+												"customer",
+												":customerId"
+											],
+											"variable": [
+												{
+													"key": "customerId"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "*/*"
+										}
+									],
+									"cookie": [],
+									"body": "[\n  {\n    \"id\": \"<long>\",\n    \"value\": \"<string>\"\n  },\n  {\n    \"id\": \"<long>\",\n    \"value\": \"<string>\"\n  }\n]"
 								}
-							],
-							"cookie": [],
-							"body": "[\n  {\n    \"id\": \"<long>\",\n    \"value\": \"<string>\"\n  },\n  {\n    \"id\": \"<long>\",\n    \"value\": \"<string>\"\n  }\n]"
+							]
 						}
 					]
 				}

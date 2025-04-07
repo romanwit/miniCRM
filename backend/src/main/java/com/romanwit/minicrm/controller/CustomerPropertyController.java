@@ -23,11 +23,6 @@ public class CustomerPropertyController {
         this.customerPropertyService = customerPropertyService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<CustomerProperty>> getAllProperties() {
-        return ResponseEntity.ok(customerPropertyService.getAllProperties());
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<CustomerProperty> getPropertyById(@PathVariable Long id) {
         return ResponseEntity.ok(customerPropertyService.getPropertyById(id));
@@ -36,11 +31,6 @@ public class CustomerPropertyController {
     @GetMapping("/customer/{customerId}")
     public ResponseEntity<List<CustomerProperty>> getPropertiesByCustomerId(@PathVariable Long customerId) {
         return ResponseEntity.ok(customerPropertyService.getPropertiesByCustomerId(customerId));
-    }
-
-    @PostMapping
-    public ResponseEntity<CustomerProperty> createProperty(@RequestBody CustomerProperty property) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(customerPropertyService.createProperty(property));
     }
 
     @PutMapping("/{id}")

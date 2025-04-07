@@ -41,10 +41,6 @@ public class CustomerPropertyService {
         this.propertyTypeRepository = propertyTypeRepository;
     }
 
-    public List<CustomerProperty> getAllProperties() {
-        return customerPropertyRepository.findAll();
-    }
-
     public CustomerProperty getPropertyById(Long id) {
         return customerPropertyRepository.findById(id).orElseThrow(
                 () -> new ExceptionFilter.ResourceNotFoundException(
@@ -53,13 +49,6 @@ public class CustomerPropertyService {
 
     public List<CustomerProperty> getPropertiesByCustomerId(Long customerId) {
         return customerPropertyRepository.findByCustomerId(customerId);
-    }
-
-    public CustomerProperty createProperty(CustomerProperty property) {
-        if (property.getCustomer() == null || property.getPropertyType() == null) {
-            throw new ExceptionFilter.InvalidRequestException("Customer and PropertyType are required");
-        }
-        return customerPropertyRepository.save(property);
     }
 
     public List<CustomerProperty> updateProperties(Long customerId, Map<Long, String> propertyUpdates) {
