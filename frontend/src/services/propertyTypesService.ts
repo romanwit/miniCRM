@@ -85,6 +85,41 @@ export const getDefaultValue = (propertyType?: PropertyType): string => {
       break;
   }
 }
+
+export const handleGetAdditionalProperty = async(id: string): Promise<{name: string, type: PropertyType}> => {
+
+  let name: string = "";
+  let type: PropertyType = PropertyType.STRING;
+
+  const controller = new AbortController();
+  const signal = controller.signal;
+  
+  const token = getToken();
+  if (!token) {
+    alert("token not found");
+    return {name, type};
+  }
+
+  setTimeout(() => {
+    controller.abort(); 
+  }, timeout);
+
+  const response = await fetch(baseUrl + `/api/property-types/${id}`, {
+    method: 'GET',
+    headers: { 
+      "Authorization": `Bearer ${token}`
+    },
+    signal,
+  });
+  if (!response.ok) throw new Error('Failed to fetch additional property data');
+  const data: Property = await response.json();
+
+  name = data.name;
+  type = data.type;
+
+  return {name, type};
+}
+
 export const getInputType = (propertyType?: PropertyType): string => {
   if (!propertyType) return 'text';
   switch (propertyType) {

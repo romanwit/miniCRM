@@ -8,12 +8,17 @@ import FormCloseButton from '../Common/FormCloseButton';
 
 
 interface EditAdditionalPropertyProps {
+    onGetAdditionalProperty: (id: string) => Promise<{name: string, type: PropertyType}>;
     onAdditionalPropertyEdited: (id: string, newProperty: NewProperty) => Promise<void>;
   }
 
-const EditAdditionalProperty: React.FC<EditAdditionalPropertyProps> = ({onAdditionalPropertyEdited})=>{
+const EditAdditionalProperty: React.FC<EditAdditionalPropertyProps> = ({onGetAdditionalProperty, onAdditionalPropertyEdited})=>{
 
     const { id } = useParams<{ id: string }>();
+
+    if (id === undefined) {
+      alert("Id is not found");
+    }
     
     enum PropertyType {
         STRING = "STRING",
@@ -29,27 +34,20 @@ const EditAdditionalProperty: React.FC<EditAdditionalPropertyProps> = ({onAdditi
     const propertyTypes = Object.values(PropertyType);
 
     useEffect(() => {
-        const fetchCustomer = async () => {
-          const token = getToken();
+
+        const fetchData = async()=> {
           try {
-            const response = await fetch(baseUrl + `/api/property-types/${id}`, {
-              method: 'GET',
-              headers: { 
-                "Authorization": `Bearer ${token}`
-              }
-            });
-            if (!response.ok) throw new Error('Failed to fetch additional property data');
-            const data: Property = await response.json();
-            setName(data.name);
-            setType(data.type);
-          } catch (err) {
-            //setError((err as Error).message);
-          } 
-    
-          
-    
-        };
-        fetchCustomer();
+            const {name, type} = await onGetAdditionalProperty(id!);
+            setName(name);
+            setType(type);
+          }
+          catch(error) {
+
+          }
+        }
+
+        fetchData();
+
       }, [id]);
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
