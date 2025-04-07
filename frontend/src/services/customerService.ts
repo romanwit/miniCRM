@@ -1,6 +1,82 @@
 import { getToken } from './authService';
 import { baseUrl, timeout } from './constService';
 
+export const handleGetCustomersList = async(): Promise<{properties: Property[], customers: Customer[]}> => {
+  
+  const controller = new AbortController();
+  const signal = controller.signal;
+
+  const token = getToken();
+
+  var properties: Property[] = [];
+  var customers: Customer[] = [];
+
+  const fetchPropertyTypes = async () => {
+        
+        try {
+  
+          const response = await fetch(baseUrl + '/api/property-types', 
+            {
+              method: "GET",
+              headers: {
+                "Authorization": `Bearer ${token}`
+              },
+              signal,
+            });
+          if (!response.ok) {
+              throw new Error(`Error: ${response.status} ${response.statusText}`);
+          }
+          const data = await response.json();
+          properties = data;
+        }
+        catch(error) {
+          console.error("Error getting properties:", error);
+          return null;
+        }
+      }
+
+      const fetchCustomers = async () => {
+            
+            try {
+              const response = await fetch(baseUrl + '/api/customers', 
+                {
+                  method: "GET",
+                  headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                  },
+                  signal,
+                });
+              if (!response.ok) {
+                  throw new Error(`Error: ${response.status} ${response.statusText}`);
+              }
+              const rawData: Customer[] = await response.json();
+              const data: Customer[] = rawData.map((item) => ({
+                ...item,
+                properties: new Map(Object.entries(item.properties)),
+              }));
+              customers = data.sort((a, b) => a.id - b.id);
+            }
+            catch(error) {
+              console.error("Error getting customers:", error);
+              return null;
+            }
+          };
+
+
+      
+            setTimeout(() => {
+              controller.abort(); 
+            }, timeout);
+            
+            await fetchPropertyTypes();
+            await fetchCustomers();
+            return {properties, customers};
+
+          
+          
+}
+
 export const handleCustomerAdded = async (newCustomer: NewCustomer, newProperties:Map<string, unknown> ) => {
   
   const controller = new AbortController();

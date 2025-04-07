@@ -7,7 +7,7 @@ import AddCustomer from './components/Customers/AddCustomer';
 import EditCustomer from './components/Customers/EditCustomer';
 import AdminDashboard from './components/Admin/AdminDashboard';
 import { handleLogin, handleRegister } from "./services/authService";
-import { handleCustomerAdded, handleCustomerUpdated } from "./services/customerService";
+import { handleCustomerAdded, handleCustomerUpdated, handleGetCustomersList } from "./services/customerService";
 import './css/Forms.css';
 import AddAdditionalProperty from './components/AdditionalProperties/AddAdditionalProperty';
 import EditAdditionalProperty from './components/AdditionalProperties/EditAdditionalProperty';
@@ -20,7 +20,7 @@ const App: React.FC = () => {
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<LoginPage onLogin={handleLogin}/>} />
         <Route path="/register" element={<RegisterPage onRegister={handleRegister}/>} />
-        <Route path="/customers" element={<CustomersList />} />
+        <Route path="/customers" element={<CustomersList onGetCustomersList={handleGetCustomersList} />} />
         <Route path="/customers/add" element={<AddCustomer onCustomerAdded={handleCustomerAdded}/>} />
         <Route path="/customers/edit/:id" element={<EditCustomer onCustomerUpdated={handleCustomerUpdated}/>} />
         <Route path="/admin" element={<AdminDashboard />} />

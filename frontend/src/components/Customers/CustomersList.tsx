@@ -1,84 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { getToken, getRole } from '../../services/authService';
-import { baseUrl, timeout } from '../../services/constService';
+import { getRole } from '../../services/authService';
 
 const role = getRole();
 
-const CustomersList: React.FC = () => {
+interface CustomersListProps {
+  onGetCustomersList: () => Promise<{properties: Property[], customers: Customer[]}>;
+}
+
+const CustomersList: React.FC<CustomersListProps> = ({onGetCustomersList}) => {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [properties, setProperties] = useState<Property[]>([]);
 
   useEffect(() => {
-    
-    const controller = new AbortController();
-    const signal = controller.signal;
-
-    const token = getToken();
-
-    const fetchPropertyTypes = async () => {
-      
+    const fetchData = async () => {
       try {
-
-        const response = await fetch(baseUrl + '/api/property-types', 
-          {
-            method: "GET",
-            headers: {
-              "Authorization": `Bearer ${token}`
-            },
-            signal,
-          });
-        if (!response.ok) {
-            throw new Error(`Error: ${response.status} ${response.statusText}`);
-        }
-        const data = await response.json();
-        setProperties(data);
-      }
-      catch(error) {
-        console.error("Error getting properties:", error);
-        return null;
-      }
-    }
-
-    const fetchCustomers = async () => {
-      
-      try {
-        const response = await fetch(baseUrl + '/api/customers', 
-          {
-            method: "GET",
-            headers: {
-              "Authorization": `Bearer ${token}`,
-              "Content-Type": "application/json"
-            },
-            signal,
-          });
-        if (!response.ok) {
-            throw new Error(`Error: ${response.status} ${response.statusText}`);
-        }
-        const rawData: Customer[] = await response.json();
-        const data: Customer[] = rawData.map((item) => ({
-          ...item,
-          properties: new Map(Object.entries(item.properties)),
-        }));
-        setCustomers(data.sort((a, b) => a.id - b.id));
-      }
-      catch(error) {
-        console.error("Error getting customers:", error);
-        return null;
+        const { customers, properties } = await onGetCustomersList();
+        setCustomers(customers);
+        setProperties(properties);
+      } catch (error) {
+        console.error('Err:', error);
       }
     };
-    const fetchData = async () => {
-      
-      setTimeout(() => {
-        controller.abort(); 
-      }, timeout);
-
-      try {
-        await fetchPropertyTypes();
-        await fetchCustomers();
-      } catch(error) {
-        console.error("Error getting data ", error);
-      }
-    }
+  
     fetchData();
   }, []);
 
