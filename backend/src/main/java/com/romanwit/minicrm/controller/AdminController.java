@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+import com.romanwit.minicrm.service.UserService;
+import org.springframework.http.HttpStatus;
+
 @RestController
 @RequestMapping("/admin")
 @CrossOrigin(origins = "*")
@@ -21,41 +24,35 @@ public class AdminController {
     private PropertyTypeRepository propertyTypeRepository;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private FixedListValueRepository fixedListValueRepository;
 
-    // --- Users CRUD ---
     @GetMapping("/users")
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public ResponseEntity<List<User>> getAllUsers() {
+	List<User> list = userService.getAllUsers();
+        return ResponseEntity.ok(list);
     }
 
     @PostMapping("/users")
     public ResponseEntity<User> createUser(@RequestBody User user) {
-        userRepository.save(user);
-        return ResponseEntity.ok(user);
+        var result = userService.createUser(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
     @PutMapping("/users/{id}")
     public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User userDetails) {
-        Optional<User> userOptional = userRepository.findById(id);
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            user.setUsername(userDetails.getUsername());
-            user.setPassword(userDetails.getPassword()); // Ensure password hashing in service layer.
-            user.setRole(userDetails.getRole());
-            userRepository.save(user);
-            return ResponseEntity.ok(user);
-        }
-        return ResponseEntity.notFound().build();
+        var result = userService.updateUser(userDetails);
+	return ResponseEntity.ok(result); 
     }
 
     @DeleteMapping("/users/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        userRepository.deleteById(id);
-        return ResponseEntity.ok().build();
+        userService.deleteUser(id); 
+        return ResponseEntity.noContent().build();
     }
 
-    // --- Property Types CRUD ---
     @GetMapping("/property-types")
     public List<PropertyType> getAllPropertyTypes() {
         return propertyTypeRepository.findAll();
@@ -86,7 +83,6 @@ public class AdminController {
         return ResponseEntity.ok().build();
     }
 
-    // --- Fixed List Values CRUD ---
     @GetMapping("/fixed-list-values")
     public List<FixedListValue> getAllFixedListValues() {
         return fixedListValueRepository.findAll();
