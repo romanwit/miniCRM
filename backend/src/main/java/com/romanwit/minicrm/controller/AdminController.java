@@ -62,11 +62,6 @@ public class AdminController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/property-types")
-    public List<PropertyType> getAllPropertyTypes() {
-        return propertyTypeRepository.findAll();
-    }
-
     @PostMapping("/property-types")
     public ResponseEntity<PropertyType> createPropertyType(@RequestBody PropertyType propertyType) {
         propertyTypeRepository.save(propertyType);
