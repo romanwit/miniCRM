@@ -15,10 +15,15 @@ import org.springframework.http.HttpStatus;
 import com.romanwit.minicrm.dto.UserDto;
 import com.romanwit.minicrm.dto.UserResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @RestController
 @RequestMapping("/admin")
 @CrossOrigin(origins = "*")
 public class AdminController {
+
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(AdminController.class);
 
     @Autowired
     private UserRepository userRepository;
@@ -45,8 +50,9 @@ public class AdminController {
     }
 
     @PutMapping("/users/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User userDetails) {
-        var result = userService.updateUser(userDetails);
+    public ResponseEntity<UserResponse> updateUser(@PathVariable Long id, @RequestBody UserDto userDetails) {
+        logger.info("updateUser started");
+        var result = userService.updateUser(id, userDetails);
         return ResponseEntity.ok(result);
     }
 

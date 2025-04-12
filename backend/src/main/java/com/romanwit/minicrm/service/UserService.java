@@ -20,8 +20,13 @@ import com.romanwit.minicrm.model.Role;
 import com.romanwit.minicrm.repository.RoleRepository;
 import com.romanwit.minicrm.dto.UserResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Service
 public class UserService {
+
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(UserService.class);
 
     @Autowired
     private UserRepository userRepository;
@@ -64,18 +69,29 @@ public class UserService {
     }
 
     @Transactional
-    public User updateUser(User user) {
-        User existing = userRepository.findById(user.getId())
+    public UserResponse updateUser(Long id, UserDto userDto) {
+        logger.info("UserService updateUser started with id " + id.toString());
+        User existing = userRepository.findById(id)
                 .orElseThrow(() -> new ExceptionFilter.ResourceNotFoundException(
-                        "User with id " + user.getId() + " not found"));
-        if (!existing.getUsername().equals(user.getUsername()) &&
-                userRepository.existsByUsername(user.getUsername())) {
+                        "User with id " + id + " not found"));
+        if (!existing.getUsername().equals(userDto.getUsername()) &&
+                userRepository.existsByUsername(userDto.getUsername())) {
             throw new ExceptionFilter.ResourceAlreadyExistsException(
-                    "User with username " + user.getUsername() + " already exists");
+                    "User with username " + userDto.getUsername() + " already exists");
         }
+
+        User user = new User();
+        user.setId(id);
+        user.setUsername(userDto.getUsername());
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        Role role = roleRepository.findById(userDto.getRole())
+                .orElseThrow(() -> new ExceptionFilter.ResourceNotFoundException("Role id " +
+                        userDto.getRole() + "does not exist"));
+        user.setRole(role);
         User updatedUser = userRepository.save(user);
+        var result = new UserResponse(id, userDto.getUsername());
         logAction("User", updatedUser.getId(), "UPDATE", existing.toString(), updatedUser.toString());
-        return updatedUser;
+        return result;
     }
 
     @Transactional
