@@ -12,6 +12,13 @@ import com.romanwit.minicrm.exception.ExceptionFilter;
 import java.util.Optional;
 import java.util.List;
 
+import com.romanwit.minicrm.dto.UserDto;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import com.romanwit.minicrm.model.Role;
+import com.romanwit.minicrm.repository.RoleRepository;
+
 @Service
 public class UserService {
 
@@ -21,20 +28,35 @@ public class UserService {
     @Autowired
     private AuditLogRepository auditLogRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private RoleRepository roleRepository;
+
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
     @Transactional
-    public User createUser(User user) {
-        if (user.getUsername() == null || user.getUsername().isBlank()) {
+    public User createUser(UserDto userDto) {
+        if (userDto.getUsername() == null || userDto.getUsername().isBlank()) {
             throw new ExceptionFilter.InvalidRequestException("Username cannot be empty");
         }
-        if (userRepository.existsByUsername(user.getUsername())) {
+        if (userRepository.existsByUsername(userDto.getUsername())) {
             throw new ExceptionFilter.ResourceAlreadyExistsException(
-                    "User with username " + user.getUsername() + " already exists");
+                    "User with username " + userDto.getUsername() + " already exists");
         }
+
+        User user = new User();
+        user.setUsername(userDto.getUsername());
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        Role role = roleRepository.findById(userDto.getRole())
+                .orElseThrow(() -> new ExceptionFilter.ResourceNotFoundException("Role id " +
+                        userDto.getRole() + "does not exist"));
+        user.setRole(role);
         User savedUser = userRepository.save(user);
+        savedUser.setPassword(userDto.getPassword());
         logAction("User", savedUser.getId(), "CREATE", null, savedUser.toString());
         return savedUser;
     }

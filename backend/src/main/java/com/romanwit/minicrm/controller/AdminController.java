@@ -12,6 +12,8 @@ import java.util.Optional;
 import com.romanwit.minicrm.service.UserService;
 import org.springframework.http.HttpStatus;
 
+import com.romanwit.minicrm.dto.UserDto;
+
 @RestController
 @RequestMapping("/admin")
 @CrossOrigin(origins = "*")
@@ -31,12 +33,12 @@ public class AdminController {
 
     @GetMapping("/users")
     public ResponseEntity<List<User>> getAllUsers() {
-	List<User> list = userService.getAllUsers();
+        List<User> list = userService.getAllUsers();
         return ResponseEntity.ok(list);
     }
 
     @PostMapping("/users")
-    public ResponseEntity<User> createUser(@RequestBody User user) {
+    public ResponseEntity<User> createUser(@RequestBody UserDto user) {
         var result = userService.createUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
@@ -44,12 +46,12 @@ public class AdminController {
     @PutMapping("/users/{id}")
     public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User userDetails) {
         var result = userService.updateUser(userDetails);
-	return ResponseEntity.ok(result); 
+        return ResponseEntity.ok(result);
     }
 
     @DeleteMapping("/users/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id); 
+        userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
 
@@ -65,7 +67,8 @@ public class AdminController {
     }
 
     @PutMapping("/property-types/{id}")
-    public ResponseEntity<PropertyType> updatePropertyType(@PathVariable Long id, @RequestBody PropertyType propertyDetails) {
+    public ResponseEntity<PropertyType> updatePropertyType(@PathVariable Long id,
+            @RequestBody PropertyType propertyDetails) {
         Optional<PropertyType> propertyTypeOptional = propertyTypeRepository.findById(id);
         if (propertyTypeOptional.isPresent()) {
             PropertyType propertyType = propertyTypeOptional.get();
@@ -95,7 +98,8 @@ public class AdminController {
     }
 
     @PutMapping("/fixed-list-values/{id}")
-    public ResponseEntity<FixedListValue> updateFixedListValue(@PathVariable Long id, @RequestBody FixedListValue valueDetails) {
+    public ResponseEntity<FixedListValue> updateFixedListValue(@PathVariable Long id,
+            @RequestBody FixedListValue valueDetails) {
         Optional<FixedListValue> valueOptional = fixedListValueRepository.findById(id);
         if (valueOptional.isPresent()) {
             FixedListValue value = valueOptional.get();
@@ -112,4 +116,3 @@ public class AdminController {
         return ResponseEntity.ok().build();
     }
 }
-
