@@ -13,6 +13,7 @@ import com.romanwit.minicrm.service.UserService;
 import org.springframework.http.HttpStatus;
 
 import com.romanwit.minicrm.dto.UserDto;
+import com.romanwit.minicrm.dto.UserResponse;
 
 @RestController
 @RequestMapping("/admin")
@@ -38,7 +39,7 @@ public class AdminController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<User> createUser(@RequestBody UserDto user) {
+    public ResponseEntity<UserResponse> createUser(@RequestBody UserDto user) {
         var result = userService.createUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }

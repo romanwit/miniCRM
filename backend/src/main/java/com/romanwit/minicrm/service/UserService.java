@@ -18,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import com.romanwit.minicrm.model.Role;
 import com.romanwit.minicrm.repository.RoleRepository;
+import com.romanwit.minicrm.dto.UserResponse;
 
 @Service
 public class UserService {
@@ -39,7 +40,7 @@ public class UserService {
     }
 
     @Transactional
-    public User createUser(UserDto userDto) {
+    public UserResponse createUser(UserDto userDto) {
         if (userDto.getUsername() == null || userDto.getUsername().isBlank()) {
             throw new ExceptionFilter.InvalidRequestException("Username cannot be empty");
         }
@@ -56,9 +57,10 @@ public class UserService {
                         userDto.getRole() + "does not exist"));
         user.setRole(role);
         User savedUser = userRepository.save(user);
-        savedUser.setPassword(userDto.getPassword());
+        var id = savedUser.getId();
+        var result = new UserResponse(id, userDto.getUsername());
         logAction("User", savedUser.getId(), "CREATE", null, savedUser.toString());
-        return savedUser;
+        return result;
     }
 
     @Transactional
