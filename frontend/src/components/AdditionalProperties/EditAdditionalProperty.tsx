@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { AlertColor } from '@mui/material';
 import { SnackBarComponent } from '../SnackBarComponent';
 import { useParams } from 'react-router-dom';
-import { getToken } from '../../services/authService';
-import { baseUrl } from '../../services/constService';
 import FormCloseButton from '../Common/FormCloseButton';
 
 
