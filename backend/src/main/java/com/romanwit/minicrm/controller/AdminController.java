@@ -62,32 +62,6 @@ public class AdminController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/property-types")
-    public ResponseEntity<PropertyType> createPropertyType(@RequestBody PropertyType propertyType) {
-        propertyTypeRepository.save(propertyType);
-        return ResponseEntity.ok(propertyType);
-    }
-
-    @PutMapping("/property-types/{id}")
-    public ResponseEntity<PropertyType> updatePropertyType(@PathVariable Long id,
-            @RequestBody PropertyType propertyDetails) {
-        Optional<PropertyType> propertyTypeOptional = propertyTypeRepository.findById(id);
-        if (propertyTypeOptional.isPresent()) {
-            PropertyType propertyType = propertyTypeOptional.get();
-            propertyType.setName(propertyDetails.getName());
-            propertyType.setType(propertyDetails.getType());
-            propertyTypeRepository.save(propertyType);
-            return ResponseEntity.ok(propertyType);
-        }
-        return ResponseEntity.notFound().build();
-    }
-
-    @DeleteMapping("/property-types/{id}")
-    public ResponseEntity<Void> deletePropertyType(@PathVariable Long id) {
-        propertyTypeRepository.deleteById(id);
-        return ResponseEntity.ok().build();
-    }
-
     @GetMapping("/fixed-list-values")
     public List<FixedListValue> getAllFixedListValues() {
         return fixedListValueRepository.findAll();
