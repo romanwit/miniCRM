@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SnackBarComponent } from '../SnackBarComponent';
 import FormCloseButton from '../Common/FormCloseButton';
 import { AlertColor } from '@mui/material';
+import { getToken } from '../../services/authService';
+import { baseUrl } from '../../services/constService';
 
 
 interface AddUserProps {
@@ -10,11 +12,41 @@ interface AddUserProps {
 
 const AddUser: React.FC<AddUserProps> = ({onUserAdded})=> {
 
+    interface Role {
+        id: number,
+        name: string
+    }
+
     const [userName, setUserName] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [role, setRole] = useState<number>(1);
+    const [roles, setRoles] = useState<Role[]>([]);
     const [snackBar, setSnackBar] = useState<{ message: string; severity: AlertColor } | null>(null);
         
+    useEffect(() => {
+        const fetchRoles = async () => {
+        const token = getToken();
+        try {
+            const response = await fetch(baseUrl + "/admin/roles", {
+            method: 'GET',
+            headers: { 
+                "Authorization": `Bearer ${token}`
+            }
+            });
+            if (!response.ok) throw new Error('Failed to fetch roles');
+            const data: Role[] = await response.json();
+            setRoles(data);
+        } catch (err) {
+            setSnackBar({ 
+                message: err instanceof Error ? err.message : 'Error fetching roles', 
+                severity: 'error' 
+              });
+        } 
+
+        };
+        fetchRoles();
+    }, []);
+
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         try {
@@ -45,9 +77,13 @@ const AddUser: React.FC<AddUserProps> = ({onUserAdded})=> {
             </div>
         <div>
             <label>Role</label>&nbsp;
-            <select value={role}> 
-                <option key="1">USER</option>
-                <option key="2">ADMIN</option>
+            <select value={role} 
+                onChange={(e) => setRole(parseInt(e.target.value))}> 
+                {roles.map((r) => (
+                    <option key={r.id} value={r.id}>
+                        {r.name}
+                    </option>
+      ))}
             </select>
         </div>
         <button type="submit">Add User</button>
