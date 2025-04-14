@@ -99,7 +99,6 @@ export const handleCreateUser = async (username: string, password: string, rolei
 
   console.log(JSON.stringify({ username, password, roleid }));
 
-  try {
     const response = await fetch(baseUrl + "/admin/users", {
       method: "POST",
       headers: { 
@@ -111,14 +110,9 @@ export const handleCreateUser = async (username: string, password: string, rolei
     });
 
     if (response.ok) {
-      alert("User created successfully.");
       window.location.href = '/admin';
     } else {
       const errorData = await response.json();
-      alert(`Failed to create user: ${errorData.message}`);
+      throw new Error(`Failed to create user: ${errorData.message}`);
     }
-  } catch (error) {
-    console.error('Error during user creation:', error);
-    alert("An error occurred. Please try again.");
-  }
 };
