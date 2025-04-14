@@ -21,6 +21,8 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
 @ControllerAdvice
 public class ExceptionFilter extends ResponseEntityExceptionHandler {
 
@@ -161,5 +163,15 @@ public class ExceptionFilter extends ResponseEntityExceptionHandler {
                 : "Request body cannot be parsed");
         body.put("path", request.getDescription(false));
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<Object> handleUsernameNotFoundException(UsernameNotFoundException ex, WebRequest request) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("message", "Unauthorized request");
+        body.put("details", "User not found");
+        body.put("path", request.getDescription(false));
+        return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
     }
 }
