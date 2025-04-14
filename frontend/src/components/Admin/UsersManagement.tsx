@@ -34,6 +34,9 @@ const UsersManagement: React.FC = () => {
   return (
     <div>
       <h2>Users Management</h2>
+      <button onClick={() => window.location.href = `/admin/addUser/`}>
+        Add user
+      </button>
       <table>
         <tbody>
         {users.map((user) => (

@@ -83,3 +83,42 @@ export const saveRole = (token: String) => {
   console.log("role saved");
 }
 
+export const handleCreateUser = async (username: string, password: string, roleid: number) => {
+  
+  const token = getToken();
+  if (!token) {
+    alert("token not found");
+  }
+  
+  const controller = new AbortController();
+  const signal = controller.signal;
+
+  setTimeout(() => {
+    controller.abort();
+  }, timeout);
+
+  console.log(JSON.stringify({ username, password, roleid }));
+
+  try {
+    const response = await fetch(baseUrl + "/admin/users", {
+      method: "POST",
+      headers: { 
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+      body: JSON.stringify({ username, password, role: roleid }),
+      signal,
+    });
+
+    if (response.ok) {
+      alert("User created successfully.");
+      window.location.href = '/admin';
+    } else {
+      const errorData = await response.json();
+      alert(`Failed to create user: ${errorData.message}`);
+    }
+  } catch (error) {
+    console.error('Error during user creation:', error);
+    alert("An error occurred. Please try again.");
+  }
+};
