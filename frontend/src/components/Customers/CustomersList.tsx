@@ -19,6 +19,7 @@ const CustomersList: React.FC<CustomersListProps> = ({onGetCustomersList}) => {
         setProperties(properties);
       } catch (error) {
         console.error('Err:', error);
+        alert(error);
       }
     };
   
