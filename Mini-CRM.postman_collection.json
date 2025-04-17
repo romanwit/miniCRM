@@ -1835,12 +1835,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{baseUrl}}/api/property-types",
+									"raw": "{{baseUrl}}/admin/property-types",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
-										"api",
+										"admin",
 										"property-types"
 									]
 								}
@@ -1929,12 +1929,12 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/api/property-types/:id",
+									"raw": "{{baseUrl}}/admin/property-types/:id",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
-										"api",
+										"admin",
 										"property-types",
 										":id"
 									],
@@ -1996,10 +1996,6 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"var jsonData = pm.response.json();",
-											"if (jsonData.id) {",
-											"    pm.expect(jsonData.id).to.equal(pm.environment.get(\"propertyId\"));",
-											"}",
 											"pm.test(\"Status code is 403\", function () {",
 											"    pm.response.to.have.status(403);",
 											"});"
@@ -2120,12 +2116,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{baseUrl}}/api/property-types/:id",
+									"raw": "{{baseUrl}}/admin/property-types/:id",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
-										"api",
+										"admin",
 										"property-types",
 										":id"
 									],
@@ -2238,12 +2234,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{baseUrl}}/api/property-types/:id",
+									"raw": "{{baseUrl}}/admin/property-types/:id",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
-										"api",
+										"admin",
 										"property-types",
 										":id"
 									],
@@ -2356,12 +2352,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{baseUrl}}/api/property-types/:id",
+									"raw": "{{baseUrl}}/admin/property-types/:id",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
-										"api",
+										"admin",
 										"property-types",
 										":id"
 									],
@@ -2474,12 +2470,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{baseUrl}}/api/property-types/:id",
+									"raw": "{{baseUrl}}/admin/property-types/:id",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
-										"api",
+										"admin",
 										"property-types",
 										":id"
 									],
@@ -2592,12 +2588,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{baseUrl}}/api/property-types/:id",
+									"raw": "{{baseUrl}}/admin/property-types/:id",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
-										"api",
+										"admin",
 										"property-types",
 										":id"
 									],
@@ -2700,12 +2696,12 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/api/property-types/:id",
+									"raw": "{{baseUrl}}/admin/property-types/:id",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
-										"api",
+										"admin",
 										"property-types",
 										":id"
 									],
@@ -2817,12 +2813,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{baseUrl}}/api/property-types/",
+									"raw": "{{baseUrl}}/admin/property-types/",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
-										"api",
+										"admin",
 										"property-types",
 										""
 									]
@@ -2910,12 +2906,12 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/api/property-types/:id",
+									"raw": "{{baseUrl}}/admin/property-types/:id",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
-										"api",
+										"admin",
 										"property-types",
 										":id"
 									],
@@ -2986,12 +2982,12 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/api/property-types/:id",
+									"raw": "{{baseUrl}}/admin/property-types/:id",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
-										"api",
+										"admin",
 										"property-types",
 										":id"
 									],

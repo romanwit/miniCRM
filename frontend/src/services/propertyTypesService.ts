@@ -53,7 +53,7 @@ export const handleAdditionalPropertyEdited = async (id: String, property: NewPr
     controller.abort(); 
   }, timeout);
 
-    const response = await fetch(baseUrl + `/api/property-types/${id}`, {
+    const response = await fetch(baseUrl + `/admin/property-types/${id}`, {
       method: "PUT",
       headers: { 
         "Authorization": `Bearer ${token}`,
@@ -104,7 +104,7 @@ export const handleGetAdditionalProperty = async(id: string): Promise<{name: str
     controller.abort(); 
   }, timeout);
 
-  const response = await fetch(baseUrl + `/api/property-types/${id}`, {
+  const response = await fetch(baseUrl + `/admin/property-types/${id}`, {
     method: 'GET',
     headers: { 
       "Authorization": `Bearer ${token}`

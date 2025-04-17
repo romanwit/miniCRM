@@ -11,19 +11,14 @@ import java.util.Optional;
 import org.springframework.http.HttpStatus;
 
 @RestController
-@RequestMapping("/api/property-types")
+@RequestMapping("/admin/property-types")
 @CrossOrigin(origins = "*")
-public class PropertyTypeController {
+public class PropertyTypeControllerAdmin {
 
     private final PropertyTypeService propertyTypeService;
 
-    public PropertyTypeController(PropertyTypeService propertyTypeService) {
+    public PropertyTypeControllerAdmin(PropertyTypeService propertyTypeService) {
         this.propertyTypeService = propertyTypeService;
-    }
-
-    @GetMapping
-    public ResponseEntity<List<PropertyType>> getAllPropertyTypes() {
-        return ResponseEntity.ok(propertyTypeService.getAllPropertyTypes());
     }
 
     @GetMapping("/{id}")
