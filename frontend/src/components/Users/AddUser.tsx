@@ -24,26 +24,29 @@ const AddUser: React.FC<AddUserProps> = ({onUserAdded})=> {
     const [snackBar, setSnackBar] = useState<{ message: string; severity: AlertColor } | null>(null);
         
     useEffect(() => {
-        const fetchRoles = async () => {
         const token = getToken();
-        try {
-            const response = await fetch(baseUrl + "/admin/roles", {
-            method: 'GET',
-            headers: { 
-                "Authorization": `Bearer ${token}`
-            }
-            });
-            if (!response.ok) throw new Error('Failed to fetch roles');
-            const data: Role[] = await response.json();
-            setRoles(data);
-        } catch (err) {
-            setSnackBar({ 
-                message: err instanceof Error ? err.message : 'Error fetching roles', 
-                severity: 'error' 
-              });
-        } 
+
+        const fetchRoles = async () => {
+        
+            try {
+                const response = await fetch(baseUrl + "/admin/roles", {
+                method: 'GET',
+                headers: { 
+                    "Authorization": `Bearer ${token}`
+                }
+                });
+                if (!response.ok) throw new Error('Failed to fetch roles');
+                const data: Role[] = await response.json();
+                setRoles(data);
+            } catch (err) {
+                setSnackBar({ 
+                    message: err instanceof Error ? err.message : 'Error fetching roles', 
+                    severity: 'error' 
+                });
+            } 
 
         };
+        
         fetchRoles();
     }, []);
 
