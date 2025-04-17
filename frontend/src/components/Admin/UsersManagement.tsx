@@ -40,7 +40,9 @@ const UsersManagement: React.FC = () => {
       <table>
         <tbody>
         {users.map((user) => (
-          <tr key={user.id}>
+          <tr key={user.id}
+            onDoubleClick={() => window.location.href = `/admin/editUser/${user.id}`} 
+          >
           <td>{user.username}</td><td>{user.role.name}</td>
           </tr>
         ))}

@@ -116,3 +116,38 @@ export const handleCreateUser = async (username: string, password: string, rolei
       throw new Error(`Failed to create user: ${errorData.message}`);
     }
 };
+
+export const handleEditUser = async (userid: string, username: string, password: string, roleid: number) => {
+  
+  const token = getToken();
+  if (!token) {
+    alert("token not found");
+  }
+  
+  const controller = new AbortController();
+  const signal = controller.signal;
+
+  setTimeout(() => {
+    controller.abort();
+  }, timeout);
+
+  console.log(userid);
+  console.log(JSON.stringify({ username, password, roleid }));
+
+  const response = await fetch(baseUrl + `/admin/users/${userid}`, {
+    method: "PUT",
+    headers: { 
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    },
+    body: JSON.stringify({ username, password, role: roleid }),
+    signal,
+  });
+
+  if (response.ok) {
+    window.location.href = '/admin';
+  } else {
+    const errorData = await response.json();
+    throw new Error(`Failed to create user: ${errorData.message}`);
+  }
+};

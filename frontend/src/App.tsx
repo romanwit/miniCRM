@@ -6,13 +6,14 @@ import CustomersList from './components/Customers/CustomersList';
 import AddCustomer from './components/Customers/AddCustomer';
 import EditCustomer from './components/Customers/EditCustomer';
 import AdminDashboard from './components/Admin/AdminDashboard';
-import { handleCreateUser, handleLogin, handleRegister } from "./services/authService";
+import { handleCreateUser, handleLogin, handleRegister, handleEditUser } from "./services/authService";
 import { handleCustomerAdded, handleCustomerUpdated, handleGetCustomersList } from "./services/customerService";
 import './css/Forms.css';
 import AddAdditionalProperty from './components/AdditionalProperties/AddAdditionalProperty';
 import EditAdditionalProperty from './components/AdditionalProperties/EditAdditionalProperty';
 import { handleAdditionalPropertyAdded, handleAdditionalPropertyEdited, handleGetAdditionalProperty } from './services/propertyTypesService';
 import AddUser from './components/Users/AddUser';
+import EditUser from './components/Users/EditUser';
 
 const App: React.FC = () => {
   return (
@@ -28,6 +29,7 @@ const App: React.FC = () => {
         <Route path="/admin/addAdditionalProperty" element={<AddAdditionalProperty onAdditionalPropertyAdded={handleAdditionalPropertyAdded} />} />
         <Route path="/admin/editAdditionalProperty/:id" element={<EditAdditionalProperty onGetAdditionalProperty={handleGetAdditionalProperty} onAdditionalPropertyEdited={handleAdditionalPropertyEdited} />} />
         <Route path="/admin/addUser" element={<AddUser onUserAdded={handleCreateUser} />} />
+        <Route path="/admin/editUser/:id" element={<EditUser onUserEdited={handleEditUser} />} />
       </Routes>
     </Router>
   );
