@@ -44,6 +44,13 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    public UserResponse getUserById(long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ExceptionFilter.ResourceNotFoundException("User id " +
+                        id + "does not exist"));
+        return new UserResponse(id, user.getUsername(), user.getRole().getId());
+    }
+
     @Transactional
     public UserResponse createUser(UserDto userDto) {
         if (userDto.getUsername() == null || userDto.getUsername().isBlank()) {
