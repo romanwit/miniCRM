@@ -43,6 +43,11 @@ public class AdminController {
         return ResponseEntity.ok(list);
     }
 
+    @GetMapping("/users/{id}")
+    public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getUserById(id));
+    }
+
     @PostMapping("/users")
     public ResponseEntity<UserResponse> createUser(@RequestBody UserDto user) {
         var result = userService.createUser(user);
