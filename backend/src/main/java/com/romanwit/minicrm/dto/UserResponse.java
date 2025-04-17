@@ -4,13 +4,15 @@ public class UserResponse {
 
     private Long id;
     private String Username;
+    private Long RoleId;
 
     public UserResponse() {
     }
 
-    public UserResponse(Long id, String Username) {
+    public UserResponse(Long id, String Username, Long RoleId) {
         this.id = id;
         this.Username = Username;
+        this.RoleId = RoleId;
     }
 
     public Long getId() {
@@ -29,4 +31,11 @@ public class UserResponse {
         this.Username = Username;
     }
 
+    public Long getRoleId() {
+        return RoleId;
+    }
+
+    public void setRoleId(Long RoleId) {
+        this.RoleId = RoleId;
+    }
 }

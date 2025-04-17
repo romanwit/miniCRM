@@ -63,7 +63,7 @@ public class UserService {
         user.setRole(role);
         User savedUser = userRepository.save(user);
         var id = savedUser.getId();
-        var result = new UserResponse(id, userDto.getUsername());
+        var result = new UserResponse(id, userDto.getUsername(), userDto.getRole());
         logAction("User", savedUser.getId(), "CREATE", null, savedUser.toString());
         return result;
     }
@@ -88,8 +88,10 @@ public class UserService {
                 .orElseThrow(() -> new ExceptionFilter.ResourceNotFoundException("Role id " +
                         userDto.getRole() + "does not exist"));
         user.setRole(role);
+        logger.info("attempt to save");
         User updatedUser = userRepository.save(user);
-        var result = new UserResponse(id, userDto.getUsername());
+        logger.info("saved");
+        var result = new UserResponse(id, userDto.getUsername(), userDto.getRole());
         logAction("User", updatedUser.getId(), "UPDATE", existing.toString(), updatedUser.toString());
         return result;
     }
