@@ -23,19 +23,19 @@ export const handleAdditionalPropertyAdded = async (newProperty: NewProperty) =>
     controller.abort(); 
   }, timeout);
   
-    const response = await fetch(baseUrl + "/api/property-types", {
-      method: "POST",
-      headers: { 
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json" 
-      },
-      body: JSON.stringify(newProperty),
-      signal,
-    });
+  const response = await fetch(baseUrl + "/admin/property-types", {
+    method: "POST",
+    headers: { 
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json" 
+    },
+    body: JSON.stringify(newProperty),
+    signal,
+  });
 
-    if (!response.ok) throw new Error("Failed to add additionalProperty");
+  if (!response.ok) throw new Error("Failed to add additionalProperty");
 
-    window.location.href = '/admin';
+  window.location.href = '/admin';
 };
 
 export const handleAdditionalPropertyEdited = async (id: String, property: NewProperty) => {
