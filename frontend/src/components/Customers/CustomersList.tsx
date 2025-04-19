@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { getRole } from '../../services/authService';
 import { SnackBarComponent } from '../Common/SnackBarComponent';
+import { AlertColor } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 const role = getRole();
 
@@ -11,6 +13,20 @@ interface CustomersListProps {
 const CustomersList: React.FC<CustomersListProps> = ({onGetCustomersList}) => {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [properties, setProperties] = useState<Property[]>([]);
+  const [snackBar, setSnackBar] = useState<{ message: string; severity: AlertColor } | null>(null);
+  const [userName, setUsername] = useState<string>();
+  const navigate = useNavigate();
+
+  const handleSnackBarClose = () => {
+    setSnackBar(null);
+  };
+
+  const logout = () => {
+    localStorage.removeItem('auth_token_xyz'); 
+    localStorage.removeItem('username'); 
+    localStorage.removeItem('crm_user_role'); 
+    navigate("/login");
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -20,11 +36,19 @@ const CustomersList: React.FC<CustomersListProps> = ({onGetCustomersList}) => {
         setProperties(properties);
       } catch (error) {
         console.error('Err:', error);
-        alert(error);
+        setSnackBar({ 
+          message: error instanceof Error ? error.message : 'Error getting customer', 
+          severity: 'error' 
+        });
       }
     };
   
     fetchData();
+
+    const storedUsername = localStorage.getItem('username');
+    if (storedUsername) {
+      setUsername(storedUsername);
+    }
   }, []);
 
   function getPropertyName(id: number) {
@@ -48,9 +72,18 @@ const CustomersList: React.FC<CustomersListProps> = ({onGetCustomersList}) => {
 
   return (
     <div className="table-container">
+      {
+        userName ? <div>
+          <button onClick={logout}>
+            Logout
+          </button>
+          &nbsp;&nbsp;{userName}
+        </div> : <div>Login</div>
+      }
       {role === 'ROLE_ADMIN' && (
         <div style={{position: 'fixed',
                 top: '10px',
+                right: '10%',
                 width: '50%',
                 textAlign: 'right'}}>
           <button 
@@ -97,6 +130,14 @@ const CustomersList: React.FC<CustomersListProps> = ({onGetCustomersList}) => {
     ))}
       </tbody>
       </table>
+          {snackBar && (
+              <SnackBarComponent
+                message={snackBar.message}
+                severity={snackBar.severity}
+                duration={4000}
+                onClose={handleSnackBarClose}
+              />
+            )}
     </div>
   );
 };
