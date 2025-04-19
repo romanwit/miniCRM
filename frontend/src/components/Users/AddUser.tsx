@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { SnackBarComponent } from '../SnackBarComponent';
+import { SnackBarComponent } from '../Common/SnackBarComponent';
 import FormCloseButton from '../Common/FormCloseButton';
 import { AlertColor } from '@mui/material';
 import { getToken } from '../../services/authService';

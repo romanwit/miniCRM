@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { AlertColor } from '@mui/material';
-import { SnackBarComponent } from '../SnackBarComponent';
+import { SnackBarComponent } from '../Common/SnackBarComponent';
 import { useParams } from 'react-router-dom';
 import FormCloseButton from '../Common/FormCloseButton';
 

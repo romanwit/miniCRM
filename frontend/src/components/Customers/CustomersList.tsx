@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getRole } from '../../services/authService';
+import { SnackBarComponent } from '../Common/SnackBarComponent';
 
 const role = getRole();
 

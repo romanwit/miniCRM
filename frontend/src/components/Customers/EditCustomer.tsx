@@ -4,7 +4,7 @@ import { getToken } from '../../services/authService';
 import { baseUrl } from '../../services/constService';
 import { getAllProperties, getInputType, getDefaultValue } from '../../services/propertyTypesService';
 import FormCloseButton from '../Common/FormCloseButton';
-import { SnackBarComponent } from '../SnackBarComponent';
+import { SnackBarComponent } from '../Common/SnackBarComponent';
 import { AlertColor } from '@mui/material';
 
 interface EditCustomerProps {

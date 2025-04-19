@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { AlertColor } from '@mui/material';
-import { SnackBarComponent } from '../SnackBarComponent';
+import { SnackBarComponent } from '../Common/SnackBarComponent';
 import { getToken } from '../../services/authService';
 import { baseUrl } from '../../services/constService';
 import { getDefaultValue, getInputType } from '../../services/propertyTypesService';
