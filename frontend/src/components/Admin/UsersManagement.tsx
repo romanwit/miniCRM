@@ -32,7 +32,7 @@ const UsersManagement: React.FC = () => {
   }, []);
 
   return (
-    <div>
+    <div className="table-container">
       <h2>Users Management</h2>
       <button onClick={() => window.location.href = `/admin/addUser/`}>
         Add user

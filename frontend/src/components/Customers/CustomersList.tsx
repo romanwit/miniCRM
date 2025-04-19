@@ -46,7 +46,7 @@ const CustomersList: React.FC<CustomersListProps> = ({onGetCustomersList}) => {
   }
 
   return (
-    <div>
+    <div className="table-container">
       {role === 'ROLE_ADMIN' && (
         <div style={{position: 'fixed',
                 top: '10px',

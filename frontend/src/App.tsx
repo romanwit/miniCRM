@@ -9,6 +9,7 @@ import AdminDashboard from './components/Admin/AdminDashboard';
 import { handleCreateUser, handleLogin, handleRegister, handleEditUser } from "./services/authService";
 import { handleCustomerAdded, handleCustomerUpdated, handleGetCustomersList } from "./services/customerService";
 import './css/Forms.css';
+import './css/Tables.css';
 import AddAdditionalProperty from './components/AdditionalProperties/AddAdditionalProperty';
 import EditAdditionalProperty from './components/AdditionalProperties/EditAdditionalProperty';
 import { handleAdditionalPropertyAdded, handleAdditionalPropertyEdited, handleGetAdditionalProperty } from './services/propertyTypesService';

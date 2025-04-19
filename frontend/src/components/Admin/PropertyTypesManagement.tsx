@@ -29,7 +29,7 @@ const PropertyTypesManagement: React.FC = () => {
   }, []);
 
   return (
-    <div>
+    <div className="table-container">
       <h2>Property Types Management</h2>
       <button onClick={() => window.location.href = `/admin/addAdditionalProperty/`}>
         Add additional property
