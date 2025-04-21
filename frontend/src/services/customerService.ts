@@ -13,6 +13,7 @@ export const handleGetCustomersList = async(): Promise<{properties: Property[], 
 
   const fetchPropertyTypes = async () => {
   
+    try {
           const response = await fetch(baseUrl + '/api/property-types', 
             {
               method: "GET",
@@ -21,11 +22,18 @@ export const handleGetCustomersList = async(): Promise<{properties: Property[], 
               },
               signal,
             });
+          
+          
           if (!response.ok) {
-              throw new Error(`Error getting properties: ${response.status} ${response.statusText}`);
+            console.log(await response.text());
+            throw new Error(`Error getting properties: ${response.status} ${response.statusText}`);
           }
           const data = await response.json();
           properties = data;
+        }
+        catch(error) {
+          throw new Error('Error getting properties');
+        }
       }
 
       const fetchCustomers = async () => {
