@@ -22,7 +22,6 @@ const App: React.FC = () => {
       <Routes>
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<LoginPage onLogin={handleLogin}/>} />
-        <Route path="/register" element={<RegisterPage onRegister={handleRegister}/>} />
         <Route path="/customers" element={<CustomersList onGetCustomersList={handleGetCustomersList} />} />
         <Route path="/customers/add" element={<AddCustomer onCustomerAdded={handleCustomerAdded}/>} />
         <Route path="/customers/edit/:id" element={<EditCustomer onCustomerUpdated={handleCustomerUpdated}/>} />

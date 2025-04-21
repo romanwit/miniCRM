@@ -30,36 +30,6 @@ export const handleLogin = async (username: string, password: string) => {
   }
 };
 
-export const handleRegister = async (username: string, password: string, email: string) => {
-  
-  const controller = new AbortController();
-  const signal = controller.signal;
-
-  setTimeout(() => {
-    controller.abort(); 
-  }, timeout);
-
-  try {
-    const response = await fetch(baseUrl + "/api/auth/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password, email }),
-      signal,
-    });
-
-    if (response.ok) {
-      alert("Registration successful! Please log in.");
-      window.location.href = "/login";
-    } else {
-      const errorData = await response.json();
-      alert(`Registration failed: ${errorData.message}`);
-    }
-  } catch (error) {
-    console.error('Error during registration:', error);
-    alert("An error occurred. Please try again.");
-  }
-};
-
 export const getToken = (): String | null => {
   const token = localStorage.getItem(keyOfToken);
   return token;
