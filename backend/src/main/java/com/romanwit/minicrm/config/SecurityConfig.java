@@ -44,31 +44,11 @@ public class SecurityConfig {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    /*
-     * @Bean
-     * public UserDetailsService userDetailsService() {
-     * return username -> {
-     * User user = userRepository.findByUsername(username)
-     * .orElseThrow(() -> new UsernameNotFoundException("User not found: " +
-     * username));
-     * 
-     * logger.info("User found " + username);
-     * 
-     * return org.springframework.security.core.userdetails.User.builder()
-     * .username(user.getUsername())
-     * .password(user.getPassword())
-     * .roles(user.getRole().getName())
-     * .build();
-     * };
-     * }
-     */
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // HttpSecurity
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -86,19 +66,9 @@ public class SecurityConfig {
                         .anyRequest().authenticated())
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
                         UsernamePasswordAuthenticationFilter.class)
-                /*
-                 * .formLogin(login -> login
-                 * .loginPage("/login")
-                 * .permitAll()
-                 * )
-                 */
+
                 .formLogin().disable()
-                /*
-                 * .formLogin(login -> login
-                 * .loginProcessingUrl("/api/login")
-                 * .permitAll()
-                 * )
-                 */
+
                 .logout(logout -> logout
                         .logoutUrl("/api/logout")
                         .permitAll());
@@ -106,7 +76,6 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // AuthenticationManager
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder = http
