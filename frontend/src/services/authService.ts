@@ -1,7 +1,4 @@
-import { baseUrl, timeout } from './constService';
-
-const keyOfToken: string = "auth_token_xyz";
-const keyOfRole: string = "crm_user_role";
+import { baseUrl, timeout, keyOfToken, keyOfRole } from './constService';
 
 export const handleLogin = async (username: string, password: string) => {
 
