@@ -78,7 +78,11 @@ const CustomersList: React.FC<CustomersListProps> = ({onGetCustomersList}) => {
             Logout
           </button>
           &nbsp;&nbsp;{userName}
-        </div> : <div>Login</div>
+        </div> : <div>
+        <button onClick={() => window.location.href = '/login'}>
+            Login
+          </button>
+          </div>
       }
       {role === 'ROLE_ADMIN' && (
         <div style={{position: 'fixed',
