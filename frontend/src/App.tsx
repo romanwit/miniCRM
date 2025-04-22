@@ -1,12 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import LoginPage from './components/Users/LoginPage';
-import RegisterPage from './components/Users/RegisterPage';
 import CustomersList from './components/Customers/CustomersList';
 import AddCustomer from './components/Customers/AddCustomer';
 import EditCustomer from './components/Customers/EditCustomer';
 import AdminDashboard from './components/Admin/AdminDashboard';
-import { handleCreateUser, handleLogin, handleRegister, handleEditUser } from "./services/authService";
+import { handleCreateUser, handleLogin, handleEditUser } from "./services/authService";
 import { handleCustomerAdded, handleCustomerUpdated, handleGetCustomersList } from "./services/customerService";
 import './css/Forms.css';
 import './css/Tables.css';
