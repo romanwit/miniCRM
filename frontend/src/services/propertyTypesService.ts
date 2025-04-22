@@ -1,3 +1,4 @@
+import { createTrackedAbortController } from '../utils/AbortManager';
 import { getToken } from './authService';
 import { baseUrl, timeout } from './constService';
 
@@ -10,7 +11,7 @@ enum PropertyType {
 
 export const handleAdditionalPropertyAdded = async (newProperty: NewProperty) => {
   
-  const controller = new AbortController();
+  const controller = createTrackedAbortController();
   const signal = controller.signal;
   
   const token = getToken();
@@ -40,7 +41,7 @@ export const handleAdditionalPropertyAdded = async (newProperty: NewProperty) =>
 
 export const handleAdditionalPropertyEdited = async (id: String, property: NewProperty) => {
   
-  const controller = new AbortController();
+  const controller = createTrackedAbortController();
   const signal = controller.signal;
   
   const token = getToken();
@@ -91,7 +92,7 @@ export const handleGetAdditionalProperty = async(id: string): Promise<{name: str
   let name: string = "";
   let type: PropertyType = PropertyType.STRING;
 
-  const controller = new AbortController();
+  const controller = createTrackedAbortController();
   const signal = controller.signal;
   
   const token = getToken();
@@ -147,7 +148,7 @@ export const getPropertyName = async (propertyTypeId: number): Promise<string | 
 
 export const getAllProperties = async ():Promise<Property[]> => {
 
-  const controller = new AbortController();
+  const controller = createTrackedAbortController();
   const signal = controller.signal;
 
     const token = getToken();

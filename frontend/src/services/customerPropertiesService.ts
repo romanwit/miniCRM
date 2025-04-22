@@ -1,3 +1,4 @@
+import { createTrackedAbortController } from '../utils/AbortManager';
 import { getToken } from './authService';
 import { baseUrl, timeout } from './constService';
 
@@ -6,7 +7,7 @@ export const getAllProperties = async ():Promise<Property[]> => {
 
     var result: Property[] = [];
 
-    const controller = new AbortController();
+    const controller = createTrackedAbortController();
     const signal = controller.signal;
 
     const token = getToken();

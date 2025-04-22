@@ -1,8 +1,9 @@
+import { createTrackedAbortController } from '../utils/AbortManager';
 import { baseUrl, timeout, keyOfToken, keyOfRole } from './constService';
 
 export const handleLogin = async (username: string, password: string) => {
 
-  const controller = new AbortController();
+  const controller = createTrackedAbortController();
   const signal = controller.signal;
 
   setTimeout(() => {
@@ -57,7 +58,7 @@ export const handleCreateUser = async (username: string, password: string, rolei
     alert("token not found");
   }
   
-  const controller = new AbortController();
+  const controller = createTrackedAbortController();
   const signal = controller.signal;
 
   setTimeout(() => {
@@ -91,7 +92,7 @@ export const handleEditUser = async (userid: string, username: string, password:
     alert("token not found");
   }
   
-  const controller = new AbortController();
+  const controller = createTrackedAbortController();
   const signal = controller.signal;
 
   setTimeout(() => {

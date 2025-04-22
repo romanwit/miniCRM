@@ -1,9 +1,10 @@
+import { createTrackedAbortController } from '../utils/AbortManager';
 import { getToken } from './authService';
 import { baseUrl, timeout } from './constService';
 
 export const handleGetCustomersList = async(): Promise<{properties: Property[], customers: Customer[]}> => {
   
-  const controller = new AbortController();
+  const controller = createTrackedAbortController();
   const signal = controller.signal;
 
   const token = getToken();
@@ -80,7 +81,7 @@ export const handleGetCustomersList = async(): Promise<{properties: Property[], 
 
 export const handleCustomerAdded = async (newCustomer: NewCustomer, newProperties:Map<string, unknown> ) => {
   
-  const controller = new AbortController();
+  const controller = createTrackedAbortController();
   const signal = controller.signal;
 
   const token = getToken();
@@ -142,7 +143,7 @@ export const handleCustomerAdded = async (newCustomer: NewCustomer, newPropertie
 
 export const handleCustomerUpdated = async (customer: Customer) => {
 
-    const controller = new AbortController();
+    const controller = createTrackedAbortController();
     const signal = controller.signal;
 
     const token = getToken();
