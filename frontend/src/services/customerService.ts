@@ -1,6 +1,6 @@
 import { createTrackedAbortController } from '../utils/AbortManager';
 import { getToken } from './authService';
-import { baseUrl, timeout } from './constService';
+import { baseUrl } from './constService';
 
 export const handleGetCustomersList = async(): Promise<{properties: Property[], customers: Customer[]}> => {
   
@@ -64,12 +64,6 @@ export const handleGetCustomersList = async(): Promise<{properties: Property[], 
               return null;
             }
           };
-
-
-      
-            setTimeout(() => {
-              controller.abort(); 
-            }, timeout);
             
             await fetchPropertyTypes();
             await fetchCustomers();
@@ -130,10 +124,6 @@ export const handleCustomerAdded = async (newCustomer: NewCustomer, newPropertie
       const updatedCustomerProperties = await response.json();
       console.log('Customer properites updated successfully:', updatedCustomerProperties);
     }
-
-    setTimeout(() => {
-      controller.abort(); 
-    }, timeout);
 
     await addCustomer();
     await addNewCustomerProperties();
@@ -198,10 +188,6 @@ export const handleCustomerUpdated = async (customer: Customer) => {
           window.location.href = '/customers';
 
     }
-
-    setTimeout(() => {
-      controller.abort(); 
-    }, timeout);
 
     await editCustomer();
     await editOrAddCustomerProperties();

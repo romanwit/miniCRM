@@ -1,14 +1,10 @@
 import { createTrackedAbortController } from '../utils/AbortManager';
-import { baseUrl, timeout, keyOfToken, keyOfRole } from './constService';
+import { baseUrl, keyOfToken, keyOfRole } from './constService';
 
 export const handleLogin = async (username: string, password: string) => {
 
   const controller = createTrackedAbortController();
   const signal = controller.signal;
-
-  setTimeout(() => {
-    controller.abort(); 
-  }, timeout);
 
   try {
     const response = await fetch(baseUrl + "/api/auth/login", {
@@ -61,10 +57,6 @@ export const handleCreateUser = async (username: string, password: string, rolei
   const controller = createTrackedAbortController();
   const signal = controller.signal;
 
-  setTimeout(() => {
-    controller.abort();
-  }, timeout);
-
   console.log(JSON.stringify({ username, password, roleid }));
 
     const response = await fetch(baseUrl + "/admin/users", {
@@ -94,10 +86,6 @@ export const handleEditUser = async (userid: string, username: string, password:
   
   const controller = createTrackedAbortController();
   const signal = controller.signal;
-
-  setTimeout(() => {
-    controller.abort();
-  }, timeout);
 
   console.log(userid);
   console.log(JSON.stringify({ username, password, roleid }));

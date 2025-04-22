@@ -1,6 +1,6 @@
 import { createTrackedAbortController } from '../utils/AbortManager';
 import { getToken } from './authService';
-import { baseUrl, timeout } from './constService';
+import { baseUrl } from './constService';
 
 
 export const getAllProperties = async ():Promise<Property[]> => {
@@ -13,10 +13,6 @@ export const getAllProperties = async ():Promise<Property[]> => {
     const token = getToken();
 
     try {
-
-      setTimeout(() => {
-        controller.abort(); 
-      }, timeout);
       
         const response = await fetch(baseUrl + "/api/customer-properties", {
           method: "GET",

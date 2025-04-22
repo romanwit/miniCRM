@@ -1,6 +1,6 @@
 import { createTrackedAbortController } from '../utils/AbortManager';
 import { getToken } from './authService';
-import { baseUrl, timeout } from './constService';
+import { baseUrl } from './constService';
 
 enum PropertyType {
   STRING = "STRING",
@@ -19,10 +19,6 @@ export const handleAdditionalPropertyAdded = async (newProperty: NewProperty) =>
     alert("token not found");
     return;
   }
-
-  setTimeout(() => {
-    controller.abort(); 
-  }, timeout);
   
   const response = await fetch(baseUrl + "/admin/property-types", {
     method: "POST",
@@ -49,10 +45,6 @@ export const handleAdditionalPropertyEdited = async (id: String, property: NewPr
     alert("token not found");
     return;
   }
-  
-  setTimeout(() => {
-    controller.abort(); 
-  }, timeout);
 
     const response = await fetch(baseUrl + `/admin/property-types/${id}`, {
       method: "PUT",
@@ -100,10 +92,6 @@ export const handleGetAdditionalProperty = async(id: string): Promise<{name: str
     alert("token not found");
     return {name, type};
   }
-
-  setTimeout(() => {
-    controller.abort(); 
-  }, timeout);
 
   const response = await fetch(baseUrl + `/admin/property-types/${id}`, {
     method: 'GET',
@@ -154,10 +142,6 @@ export const getAllProperties = async ():Promise<Property[]> => {
     const token = getToken();
 
     var result: Property[] = [];
-
-    setTimeout(() => {
-      controller.abort(); 
-    }, timeout);
 
     try {
         const response = await fetch(baseUrl + "/api/property-types", {

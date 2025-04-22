@@ -1,10 +1,18 @@
+import { timeout } from "../services/constService";
+
 const controllers = new Set<AbortController>();
 
 export function createTrackedAbortController(): AbortController {
   const controller = new AbortController();
+
+  const timeoutId = setTimeout(() => {
+    controller.abort();  
+  }, timeout);
+
   controllers.add(controller);
 
   controller.signal.addEventListener("abort", () => {
+    clearTimeout(timeoutId);
     controllers.delete(controller);
   });
 
