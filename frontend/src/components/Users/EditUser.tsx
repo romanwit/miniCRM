@@ -119,7 +119,7 @@ const EditUser: React.FC<EditUserProps> = ({onUserEdited})=> {
       ))}
             </select>
         </div>
-        <button type="submit">Add User</button>
+        <button type="submit">Edit User</button>
         </form>
         {snackBar && (
                 <SnackBarComponent
