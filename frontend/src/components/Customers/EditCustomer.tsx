@@ -115,6 +115,7 @@ const EditCustomer: React.FC<EditCustomerProps> = ({ onCustomerUpdated }) => {
         <input type="tel" value={customer.phone} onChange={(e) => setCustomer({ ...customer, phone: e.target.value })} />
       </div>
       {customer.properties && Object.entries(customer.properties).length > 0 && <h3>Properties</h3>}
+      <div style={{ maxHeight: '50vh', overflowY: 'scroll' }}>
       {
         customer.properties ? (
           [...customer.properties.entries()].map(([key, value]) => (
@@ -131,7 +132,7 @@ const EditCustomer: React.FC<EditCustomerProps> = ({ onCustomerUpdated }) => {
           <div></div> 
         )
       }
-
+      </div>
       <button type="submit">Update Customer</button>
     </form>
     {snackBar && (
