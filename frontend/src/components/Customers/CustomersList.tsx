@@ -95,7 +95,7 @@ const CustomersList: React.FC<CustomersListProps> = ({onGetCustomersList}) => {
           >Admin dashboard</button>
         </div>
       )}
-      <h2>Customers List</h2>
+      <h2 className="text-2xl font-semibold text-gray-900 mb-4">Customers List</h2>
       <button onClick={() => window.location.href = '/customers/add'}>Add customer</button> 
       <table>
     <thead>
