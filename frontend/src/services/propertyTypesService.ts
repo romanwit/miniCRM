@@ -9,7 +9,7 @@ enum PropertyType {
   FIXED_LIST = "FIXED_LIST"
 }
 
-export const handleAdditionalPropertyAdded = async (newProperty: NewProperty) => {
+export const handleAdditionalPropertyAdded = async (newProperty: NewProperty): Promise<string> => {
   
   const controller = createTrackedAbortController();
   const signal = controller.signal;
@@ -17,9 +17,9 @@ export const handleAdditionalPropertyAdded = async (newProperty: NewProperty) =>
   const token = getToken();
   if (!token) {
     alert("token not found");
-    return;
+    return "";
   }
-  
+  console.log(JSON.stringify(newProperty));
   const response = await fetch(baseUrl + "/admin/property-types", {
     method: "POST",
     headers: { 
@@ -32,7 +32,11 @@ export const handleAdditionalPropertyAdded = async (newProperty: NewProperty) =>
 
   if (!response.ok) throw new Error("Failed to add additionalProperty");
 
-  window.location.href = '/admin';
+  const data = await response.json();
+  const id = data.id;
+
+  return id;
+
 };
 
 export const handleAdditionalPropertyEdited = async (id: String, property: NewProperty) => {

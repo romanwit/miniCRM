@@ -26,7 +26,10 @@ const App: React.FC = () => {
         <Route path="/customers/add" element={<AddCustomer onCustomerAdded={handleCustomerAdded}/>} />
         <Route path="/customers/edit/:id" element={<EditCustomer onCustomerUpdated={handleCustomerUpdated}/>} />
         <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/admin/addAdditionalProperty" element={<AddAdditionalProperty onAdditionalPropertyAdded={handleAdditionalPropertyAdded} />} />
+        <Route path="/admin/addAdditionalProperty" element={
+          <AddAdditionalProperty 
+            onAdditionalPropertyAdded={handleAdditionalPropertyAdded} 
+            onSaveFixedValuesList={handleFixedListValuesEdited} /> }/>
         <Route path="/admin/editAdditionalProperty/:id" element={<EditAdditionalProperty 
           onGetAdditionalProperty={handleGetAdditionalProperty}
           onAdditionalPropertyEdited={handleAdditionalPropertyEdited}

@@ -99,7 +99,7 @@ const EditAdditionalProperty: React.FC<EditAdditionalPropertyProps> =
         setSnackBar(null);
       };
 
-      const handleFixedValuesListUpdate = (updatedItems: string[]) => {
+    const handleFixedValuesListUpdate = (updatedItems: string[]) => {
         console.log("Updated list:", updatedItems);
         setFixedValuesList(updatedItems.map((value, index) => ({ id: index + 1, value })));
       };
