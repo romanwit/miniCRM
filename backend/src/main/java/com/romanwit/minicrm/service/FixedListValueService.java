@@ -105,12 +105,19 @@ public class FixedListValueService {
      * }
      */
     @Transactional
-    public void deleteValue(Long valueId) {
-        FixedListValue value = fixedListValueRepository.findById(valueId)
-                .orElseThrow(() -> new ExceptionFilter.ResourceNotFoundException(
-                        "FixedListValue with id " + valueId + " not found"));
-        fixedListValueRepository.delete(value);
-        logAction("FixedListValue", valueId, "DELETE", value.toString(), null);
+    public void deleteValues(Long propertyId) {
+        /*
+         * FixedListValue value = fixedListValueRepository.findById(valueId)
+         * .orElseThrow(() -> new ExceptionFilter.ResourceNotFoundException(
+         * "FixedListValue with id " + valueId + " not found"));
+         * fixedListValueRepository.delete(value);
+         * logAction("FixedListValue", valueId, "DELETE", value.toString(), null);
+         */
+        if (fixedListValueRepository.existsByPropertyId(propertyId)) {
+            fixedListValueRepository.deleteAllByPropertyId(propertyId);
+        } else {
+            throw new ExceptionFilter.ResourceNotFoundException("Values not found");
+        }
     }
 
     private void logAction(String entity, Long entityId, String action, String oldValue, String newValue) {

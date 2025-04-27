@@ -123,7 +123,8 @@ public class AdminController {
 
     @DeleteMapping("/fixed-list-values/{id}")
     public ResponseEntity<Void> deleteFixedListValue(@PathVariable Long id) {
-        fixedListValueRepository.deleteById(id);
+        // fixedListValueRepository.deleteById(id);
+        fixedListValueService.deleteValues(id);
         return ResponseEntity.ok().build();
     }
 }

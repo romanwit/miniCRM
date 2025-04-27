@@ -13,4 +13,8 @@ public interface FixedListValueRepository extends JpaRepository<FixedListValue, 
 
     boolean existsByPropertyIdAndValue(Long propertyId, String value);
 
+    boolean existsByPropertyId(Long propertyId);
+
+    void deleteAllByPropertyId(Long propertyId);
+
 }
