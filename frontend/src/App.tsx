@@ -14,6 +14,7 @@ import EditAdditionalProperty from './components/AdditionalProperties/EditAdditi
 import { handleAdditionalPropertyAdded, handleAdditionalPropertyEdited, handleGetAdditionalProperty } from './services/propertyTypesService';
 import AddUser from './components/Users/AddUser';
 import EditUser from './components/Users/EditUser';
+import { handleGetFixedValuesList, handleFixedListValuesEdited } from './services/fixedListValuesService';
 
 const App: React.FC = () => {
   return (
@@ -26,7 +27,11 @@ const App: React.FC = () => {
         <Route path="/customers/edit/:id" element={<EditCustomer onCustomerUpdated={handleCustomerUpdated}/>} />
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/admin/addAdditionalProperty" element={<AddAdditionalProperty onAdditionalPropertyAdded={handleAdditionalPropertyAdded} />} />
-        <Route path="/admin/editAdditionalProperty/:id" element={<EditAdditionalProperty onGetAdditionalProperty={handleGetAdditionalProperty} onAdditionalPropertyEdited={handleAdditionalPropertyEdited} />} />
+        <Route path="/admin/editAdditionalProperty/:id" element={<EditAdditionalProperty 
+          onGetAdditionalProperty={handleGetAdditionalProperty}
+          onAdditionalPropertyEdited={handleAdditionalPropertyEdited}
+          onGetFixedValuesList={handleGetFixedValuesList} 
+          onSaveFixedValuesList={handleFixedListValuesEdited}/>}></Route>
         <Route path="/admin/addUser" element={<AddUser onUserAdded={handleCreateUser} />} />
         <Route path="/admin/editUser/:id" element={<EditUser onUserEdited={handleEditUser} />} />
       </Routes>

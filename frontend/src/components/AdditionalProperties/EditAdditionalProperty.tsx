@@ -3,14 +3,22 @@ import { AlertColor } from '@mui/material';
 import { SnackBarComponent } from '../Common/SnackBarComponent';
 import { useParams } from 'react-router-dom';
 import FormCloseButton from '../Common/FormCloseButton';
+import EditableList from '../Common/EditableList';
 
+interface FixedValueItem {
+  id: number;
+  value: string;
+}
 
 interface EditAdditionalPropertyProps {
     onGetAdditionalProperty: (id: string) => Promise<{name: string, type: PropertyType}>;
+    onGetFixedValuesList: (id: string) => Promise<FixedValueItem[]>;
     onAdditionalPropertyEdited: (id: string, newProperty: NewProperty) => Promise<void>;
+    onSaveFixedValuesList:  (id: String, list: String[])=> Promise<void>;
   }
 
-const EditAdditionalProperty: React.FC<EditAdditionalPropertyProps> = ({onGetAdditionalProperty, onAdditionalPropertyEdited})=>{
+const EditAdditionalProperty: React.FC<EditAdditionalPropertyProps> = 
+  ({onGetAdditionalProperty, onAdditionalPropertyEdited, onGetFixedValuesList, onSaveFixedValuesList})=>{
 
     const { id } = useParams<{ id: string }>();
 
@@ -28,25 +36,37 @@ const EditAdditionalProperty: React.FC<EditAdditionalPropertyProps> = ({onGetAdd
     const [name, setName] = useState<string>('');
     const [type, setType] = useState<PropertyType>(PropertyType.STRING);
     const [snackBar, setSnackBar] = useState<{ message: string; severity: AlertColor } | null>(null);
-    
+    const [fixedValuesList, setFixedValuesList] = useState<FixedValueItem[]>([]);
+
     const propertyTypes = Object.values(PropertyType);
 
     useEffect(() => {
 
         const fetchData = async()=> {
           try {
+            console.log("fetching");
             const {name, type} = await onGetAdditionalProperty(id!);
             setName(name);
             setType(type);
+            if (type==PropertyType.FIXED_LIST) {
+              console.log("fetching list");
+              var list = await onGetFixedValuesList(id!);
+              console.log('got list from handler');
+              console.log(list);
+              setFixedValuesList(list);
+            }
           }
           catch(error) {
-
+            setSnackBar({ 
+              message: error instanceof Error ? error.message : 'Error reading additional property', 
+              severity: 'error' 
+            });
           }
         }
 
         fetchData();
 
-      }, [id]);
+      }, []);
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -62,10 +82,26 @@ const EditAdditionalProperty: React.FC<EditAdditionalPropertyProps> = ({onGetAdd
                 severity: 'error' 
               });
         }
+        if (type==PropertyType.FIXED_LIST) {
+          try {
+            await onSaveFixedValuesList(id!, fixedValuesList.map(item=>item.value));
+          }
+          catch(error) {
+            setSnackBar({ 
+              message: error instanceof Error ? error.message : 'Error editing fixed list values', 
+              severity: 'error' 
+            });
+          }
+        }
     }
 
     const handleSnackBarClose = () => {
         setSnackBar(null);
+      };
+
+      const handleFixedValuesListUpdate = (updatedItems: string[]) => {
+        console.log("Updated list:", updatedItems);
+        setFixedValuesList(updatedItems.map((value, index) => ({ id: index + 1, value })));
       };
 
     return (
@@ -85,6 +121,9 @@ const EditAdditionalProperty: React.FC<EditAdditionalPropertyProps> = ({onGetAdd
                 </option>
                 ))}
             </select>
+            {type === PropertyType.FIXED_LIST && <EditableList 
+              onFixedListValuesEdited={handleFixedValuesListUpdate} 
+              list={fixedValuesList} />}     
         </div>
         <button type="submit">Edit Additional Property</button>
         </form>

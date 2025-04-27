@@ -125,7 +125,7 @@ const EditCustomer: React.FC<EditCustomerProps> = ({ onCustomerUpdated }) => {
                 type={getInputType(allProperties.find(p=>p.id == Number(key))?.type)}
                 value={value?value as string:getDefaultValue(allProperties.find(p=>p.id == Number(key))?.type)} 
                 onChange={(e) => handlePropertyChange(e, Number(key))}
-              />
+              />  
             </div>
           ))
         ) : (
