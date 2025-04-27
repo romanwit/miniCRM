@@ -9,7 +9,6 @@ const AdminDashboard: React.FC = () => {
       <h1>Admin Dashboard</h1>
       <UsersManagement />
       <PropertyTypesManagement />
-      <FixedListValuesManagement />
     </div>
   );
 };
