@@ -5,11 +5,6 @@ import { useParams } from 'react-router-dom';
 import FormCloseButton from '../Common/FormCloseButton';
 import EditableList from '../Common/EditableList';
 
-interface FixedValueItem {
-  id: number;
-  value: string;
-}
-
 interface EditAdditionalPropertyProps {
     onGetAdditionalProperty: (id: string) => Promise<{name: string, type: PropertyType}>;
     onGetFixedValuesList: (id: string) => Promise<FixedValueItem[]>;

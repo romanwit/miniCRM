@@ -4,12 +4,6 @@ import { SnackBarComponent } from '../Common/SnackBarComponent';
 import FormCloseButton from '../Common/FormCloseButton';
 import EditableList from '../Common/EditableList';
 
-interface FixedValueItem {
-    id: number;
-    value: string;
-  }
-
-
 interface AddAdditionalPropertyProps {
     onAdditionalPropertyAdded: (newProperty: NewProperty) => Promise<string>;
     onSaveFixedValuesList:  (id: String, list: String[])=> Promise<void>;
