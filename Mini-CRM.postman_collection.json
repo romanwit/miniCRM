@@ -3545,6 +3545,94 @@
 							]
 						},
 						{
+							"name": "get user by id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = pm.response.json();",
+											"if (jsonData.length) {",
+											"    pm.environment.set(\"users_length\", jsonData.length);",
+											"}",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "*/*"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/admin/users/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"admin",
+										"users",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{userId}}"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/admin/users",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"admin",
+												"users"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "*/*"
+										}
+									],
+									"cookie": [],
+									"body": "[\n  {\n    \"id\": \"<long>\",\n    \"username\": \"<string>\",\n    \"password\": \"<string>\",\n    \"role\": {\n      \"id\": \"<long>\",\n      \"name\": \"<string>\"\n    }\n  },\n  {\n    \"id\": \"<long>\",\n    \"username\": \"<string>\",\n    \"password\": \"<string>\",\n    \"role\": {\n      \"id\": \"<long>\",\n      \"name\": \"<string>\"\n    }\n  }\n]"
+								}
+							]
+						},
+						{
 							"name": "login new user",
 							"event": [
 								{
@@ -4353,12 +4441,68 @@
 					"name": "fixed-list-values",
 					"item": [
 						{
-							"name": "{id}",
-							"item": [
+							"name": "create Property Type Fixed List",
+							"event": [
 								{
-									"name": "update Fixed List Value",
-									"request": {
-										"method": "PUT",
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = pm.response.json();",
+											"if (jsonData.id) {",
+											"    pm.environment.set(\"fixedpropertyId\", jsonData.id);",
+											"}",
+											"pm.test(\"Status code is 201\", function () {",
+											"    pm.response.to.have.status(201);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "*/*"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"LIST0\",\n  \"type\": \"FIXED_LIST\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/admin/property-types",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"admin",
+										"property-types"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "POST",
 										"header": [
 											{
 												"key": "Content-Type",
@@ -4371,7 +4515,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n  \"id\": \"<long>\",\n  \"property\": {\n    \"id\": \"<long>\",\n    \"value\": \"<string>\"\n  },\n  \"value\": \"<string>\"\n}",
+											"raw": "{\n  \"id\": \"<long>\",\n  \"name\": \"<string>\",\n  \"type\": \"<string>\"\n}",
 											"options": {
 												"raw": {
 													"headerFamily": "json",
@@ -4380,135 +4524,27 @@
 											}
 										},
 										"url": {
-											"raw": "{{baseUrl}}/admin/fixed-list-values/:id",
+											"raw": "{{baseUrl}}/api/property-types",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
-												"admin",
-												"fixed-list-values",
-												":id"
-											],
-											"variable": [
-												{
-													"key": "id",
-													"value": "<long>",
-													"description": "(Required) "
-												}
+												"api",
+												"property-types"
 											]
 										}
 									},
-									"response": [
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
 										{
-											"name": "OK",
-											"originalRequest": {
-												"method": "PUT",
-												"header": [
-													{
-														"key": "Content-Type",
-														"value": "application/json"
-													},
-													{
-														"key": "Accept",
-														"value": "*/*"
-													}
-												],
-												"body": {
-													"mode": "raw",
-													"raw": "{\n  \"id\": \"<long>\",\n  \"property\": {\n    \"id\": \"<long>\",\n    \"value\": \"<string>\"\n  },\n  \"value\": \"<string>\"\n}",
-													"options": {
-														"raw": {
-															"headerFamily": "json",
-															"language": "json"
-														}
-													}
-												},
-												"url": {
-													"raw": "{{baseUrl}}/admin/fixed-list-values/:id",
-													"host": [
-														"{{baseUrl}}"
-													],
-													"path": [
-														"admin",
-														"fixed-list-values",
-														":id"
-													],
-													"variable": [
-														{
-															"key": "id"
-														}
-													]
-												}
-											},
-											"status": "OK",
-											"code": 200,
-											"_postman_previewlanguage": "text",
-											"header": [
-												{
-													"key": "Content-Type",
-													"value": "*/*"
-												}
-											],
-											"cookie": [],
-											"body": "{\n  \"id\": \"<long>\",\n  \"property\": {\n    \"id\": \"<long>\",\n    \"value\": \"<string>\"\n  },\n  \"value\": \"<string>\"\n}"
+											"key": "Content-Type",
+											"value": "*/*"
 										}
-									]
-								},
-								{
-									"name": "delete Fixed List Value",
-									"request": {
-										"method": "DELETE",
-										"header": [],
-										"url": {
-											"raw": "{{baseUrl}}/admin/fixed-list-values/:id",
-											"host": [
-												"{{baseUrl}}"
-											],
-											"path": [
-												"admin",
-												"fixed-list-values",
-												":id"
-											],
-											"variable": [
-												{
-													"key": "id",
-													"value": "<long>",
-													"description": "(Required) "
-												}
-											]
-										}
-									},
-									"response": [
-										{
-											"name": "OK",
-											"originalRequest": {
-												"method": "DELETE",
-												"header": [],
-												"url": {
-													"raw": "{{baseUrl}}/admin/fixed-list-values/:id",
-													"host": [
-														"{{baseUrl}}"
-													],
-													"path": [
-														"admin",
-														"fixed-list-values",
-														":id"
-													],
-													"variable": [
-														{
-															"key": "id"
-														}
-													]
-												}
-											},
-											"status": "OK",
-											"code": 200,
-											"_postman_previewlanguage": "text",
-											"header": [],
-											"cookie": [],
-											"body": ""
-										}
-									]
+									],
+									"cookie": [],
+									"body": "{\n  \"id\": \"<long>\",\n  \"name\": \"<string>\",\n  \"type\": \"<string>\"\n}"
 								}
 							]
 						},
@@ -4520,6 +4556,11 @@
 									{
 										"key": "Accept",
 										"value": "*/*"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}",
+										"type": "text"
 									}
 								],
 								"url": {
@@ -4570,37 +4611,35 @@
 							]
 						},
 						{
-							"name": "create Fixed List Value",
+							"name": "get Fixed Values by Property Id",
 							"request": {
-								"method": "POST",
+								"method": "GET",
 								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									},
 									{
 										"key": "Accept",
 										"value": "*/*"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}",
+										"type": "text"
 									}
 								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n  \"id\": \"<long>\",\n  \"property\": {\n    \"id\": \"<long>\",\n    \"value\": \"<string>\"\n  },\n  \"value\": \"<string>\"\n}",
-									"options": {
-										"raw": {
-											"headerFamily": "json",
-											"language": "json"
-										}
-									}
-								},
 								"url": {
-									"raw": "{{baseUrl}}/admin/fixed-list-values",
+									"raw": "{{baseUrl}}/admin/fixed-list-values/:id",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"admin",
-										"fixed-list-values"
+										"fixed-list-values",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{fixedpropertyId}}"
+										}
 									]
 								}
 							},
@@ -4608,27 +4647,13 @@
 								{
 									"name": "OK",
 									"originalRequest": {
-										"method": "POST",
+										"method": "GET",
 										"header": [
-											{
-												"key": "Content-Type",
-												"value": "application/json"
-											},
 											{
 												"key": "Accept",
 												"value": "*/*"
 											}
 										],
-										"body": {
-											"mode": "raw",
-											"raw": "{\n  \"id\": \"<long>\",\n  \"property\": {\n    \"id\": \"<long>\",\n    \"value\": \"<string>\"\n  },\n  \"value\": \"<string>\"\n}",
-											"options": {
-												"raw": {
-													"headerFamily": "json",
-													"language": "json"
-												}
-											}
-										},
 										"url": {
 											"raw": "{{baseUrl}}/admin/fixed-list-values",
 											"host": [
@@ -4650,7 +4675,276 @@
 										}
 									],
 									"cookie": [],
+									"body": "[\n  {\n    \"id\": \"<long>\",\n    \"property\": {\n      \"id\": \"<long>\",\n      \"value\": \"<string>\"\n    },\n    \"value\": \"<string>\"\n  },\n  {\n    \"id\": \"<long>\",\n    \"property\": {\n      \"id\": \"<long>\",\n      \"value\": \"<string>\"\n    },\n    \"value\": \"<string>\"\n  }\n]"
+								}
+							]
+						},
+						{
+							"name": "update Fixed List Value",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "*/*"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\n  \"0\", \"1\"\n]",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/admin/fixed-list-values/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"admin",
+										"fixed-list-values",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{fixedpropertyId}}"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"id\": \"<long>\",\n  \"property\": {\n    \"id\": \"<long>\",\n    \"value\": \"<string>\"\n  },\n  \"value\": \"<string>\"\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/admin/fixed-list-values/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"admin",
+												"fixed-list-values",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "*/*"
+										}
+									],
+									"cookie": [],
 									"body": "{\n  \"id\": \"<long>\",\n  \"property\": {\n    \"id\": \"<long>\",\n    \"value\": \"<string>\"\n  },\n  \"value\": \"<string>\"\n}"
+								}
+							]
+						},
+						{
+							"name": "delete Fixed List Value",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/admin/fixed-list-values/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"admin",
+										"fixed-list-values",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{fixedpropertyId}}",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/admin/fixed-list-values/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"admin",
+												"fixed-list-values",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "delete Property Type Fixed",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 204\", function () {",
+											"    pm.response.to.have.status(204);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/admin/property-types/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"admin",
+										"property-types",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "{{fixedpropertyId}}",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/api/property-types/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"property-types",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": ""
 								}
 							]
 						}
