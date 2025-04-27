@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+import com.romanwit.minicrm.service.FixedListValueService;
 import com.romanwit.minicrm.service.UserService;
 import org.springframework.http.HttpStatus;
 
@@ -17,6 +18,12 @@ import com.romanwit.minicrm.dto.UserResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.romanwit.minicrm.dto.FixedListValueDto;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+
+import com.romanwit.minicrm.dto.SynchronizationResultDto;
 
 @RestController
 @RequestMapping("/admin")
@@ -33,6 +40,9 @@ public class AdminController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private FixedListValueService fixedListValueService;
 
     @Autowired
     private FixedListValueRepository fixedListValueRepository;
@@ -68,27 +78,47 @@ public class AdminController {
     }
 
     @GetMapping("/fixed-list-values")
-    public List<FixedListValue> getAllFixedListValues() {
-        return fixedListValueRepository.findAll();
+    public List<FixedListValueDto> getAllFixedListValues() {
+        return fixedListValueService.getAllValues();
     }
 
-    @PostMapping("/fixed-list-values")
-    public ResponseEntity<FixedListValue> createFixedListValue(@RequestBody FixedListValue value) {
-        fixedListValueRepository.save(value);
-        return ResponseEntity.ok(value);
+    @GetMapping("/fixed-list-values/{id}")
+    public List<FixedListValueDto> getFixedListValuesByPropertyId(@PathVariable Long id) {
+        return fixedListValueService.getValueById(id);
     }
 
-    @PutMapping("/fixed-list-values/{id}")
-    public ResponseEntity<FixedListValue> updateFixedListValue(@PathVariable Long id,
-            @RequestBody FixedListValue valueDetails) {
-        Optional<FixedListValue> valueOptional = fixedListValueRepository.findById(id);
-        if (valueOptional.isPresent()) {
-            FixedListValue value = valueOptional.get();
-            value.setValue(valueDetails.getValue());
-            fixedListValueRepository.save(value);
-            return ResponseEntity.ok(value);
-        }
-        return ResponseEntity.notFound().build();
+    /*
+     * @PostMapping("/fixed-list-values")
+     * public ResponseEntity<FixedListValue> createFixedListValue(@RequestBody
+     * FixedListValue value) {
+     * fixedListValueRepository.save(value);
+     * return ResponseEntity.ok(value);
+     * }
+     */
+
+    // @PutMapping("/fixed-list-values/{id}")
+    /*
+     * public ResponseEntity<FixedListValue> updateFixedListValue(@PathVariable Long
+     * id,
+     * 
+     * @RequestBody FixedListValue valueDetails) {
+     * Optional<FixedListValue> valueOptional =
+     * fixedListValueRepository.findById(id);
+     * if (valueOptional.isPresent()) {
+     * FixedListValue value = valueOptional.get();
+     * value.setValue(valueDetails.getValue());
+     * fixedListValueRepository.save(value);
+     * return ResponseEntity.ok(value);
+     * }
+     * return ResponseEntity.notFound().build();
+     * }
+     */
+    @PutMapping("/fixed-list-values/{propertyId}")
+    public ResponseEntity<SynchronizationResultDto> synchronizeValues(
+            @PathVariable @NotNull Long propertyId,
+            @RequestBody @NotEmpty List<@NotEmpty String> values) {
+        SynchronizationResultDto result = fixedListValueService.synchronizeValues(propertyId, values);
+        return ResponseEntity.ok(result);
     }
 
     @DeleteMapping("/fixed-list-values/{id}")
