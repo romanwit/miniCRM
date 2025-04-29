@@ -80,39 +80,9 @@ public class FixedListValueService {
         return new SynchronizationResultDto(addedValues, deletedValues);
     }
 
-    /*
-     * @Transactional
-     * public FixedListValue createValue(FixedListValue value) {
-     * if (value.getValue() == null || value.getValue().isBlank()) {
-     * throw new ExceptionFilter.
-     * InvalidRequestException("FixedListValue value cannot be empty");
-     * }
-     * FixedListValue savedValue = fixedListValueRepository.save(value);
-     * logAction("FixedListValue", savedValue.getId(), "CREATE", null,
-     * savedValue.toString());
-     * return savedValue;
-     * }
-     * 
-     * @Transactional
-     * public FixedListValue updateValue(FixedListValue value) {
-     * FixedListValue existing = fixedListValueRepository.findById(value.getId())
-     * .orElseThrow(() -> new ExceptionFilter.ResourceNotFoundException(
-     * "FixedListValue with id " + value.getId() + " not found"));
-     * FixedListValue updatedValue = fixedListValueRepository.save(value);
-     * logAction("FixedListValue", updatedValue.getId(), "UPDATE",
-     * existing.toString(), updatedValue.toString());
-     * return updatedValue;
-     * }
-     */
     @Transactional
     public void deleteValues(Long propertyId) {
-        /*
-         * FixedListValue value = fixedListValueRepository.findById(valueId)
-         * .orElseThrow(() -> new ExceptionFilter.ResourceNotFoundException(
-         * "FixedListValue with id " + valueId + " not found"));
-         * fixedListValueRepository.delete(value);
-         * logAction("FixedListValue", valueId, "DELETE", value.toString(), null);
-         */
+
         if (fixedListValueRepository.existsByPropertyId(propertyId)) {
             fixedListValueRepository.deleteAllByPropertyId(propertyId);
         } else {
