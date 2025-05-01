@@ -3,11 +3,19 @@ import { AlertColor } from '@mui/material';
 import { SnackBarComponent } from '../Common/SnackBarComponent';
 import { getToken } from '../../services/authService';
 import { baseUrl } from '../../services/constService';
-import { getDefaultValue, getInputType } from '../../services/propertyTypesService';
+import { getAllProperties, getDefaultValue, getInputType } from '../../services/propertyTypesService';
 import FormCloseButton from '../Common/FormCloseButton';
+import { handleGetFixedValuesList } from '../../services/fixedListValuesService';
 
 interface AddCustomerProps {
   onCustomerAdded: (customer: NewCustomer, newProperties: Map<string, unknown>) => Promise<void>;
+}
+
+enum PropertyType {
+  STRING = "STRING",
+  DATE = "DATE",
+  NUMBER = "NUMBER",
+  FIXED_LIST = "FIXED_LIST"
 }
 
 const AddCustomer: React.FC<AddCustomerProps> = ({ onCustomerAdded }) => {
@@ -17,10 +25,12 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onCustomerAdded }) => {
   const [properties, setProperties] = useState<Property[]>([]);
   const [propertiesValues, setPropertiesValues] = useState<Map<string, unknown>>(new Map<string, unknown>());
   const [snackBar, setSnackBar] = useState<{ message: string; severity: AlertColor } | null>(null);
+  const [fixedValues, setFixedValues] = useState<Map<String, FixedValueItem[]>>(new Map<String, FixedValueItem[]>());
 
 
   useEffect(() => {
     const fetchProperties = async () => {
+      /*
       const token = getToken();
       try {
         const response = await fetch(baseUrl + "/api/property-types", {
@@ -40,6 +50,31 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onCustomerAdded }) => {
       } catch (err) {
         alert('!')
       } 
+      */
+      
+      const arr = await getAllProperties();
+      setProperties(arr);
+
+      const vals = new Map<string, unknown>();
+      arr.forEach(p=>{
+        vals.set(String(p.id), getDefaultValue(p.type));
+      })
+      setPropertiesValues(vals);
+      
+      const map = new Map<String, FixedValueItem[]>(); 
+      
+      const promises = arr
+          .filter(p => p.type === PropertyType.FIXED_LIST)
+          .map(async p => {
+            const id = p.id.toString();
+            const temp = await handleGetFixedValuesList(id);
+            map.set(id, temp);
+          });
+      
+        await Promise.all(promises);
+      
+        setFixedValues(map);
+      
 
     };
     fetchProperties();
@@ -69,7 +104,7 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onCustomerAdded }) => {
     setSnackBar(null);
   };
 
-  const handlePropertyChange = (event: React.ChangeEvent<HTMLInputElement>, propertyId: number) => {
+  const handlePropertyChange = (event: React.ChangeEvent<HTMLInputElement|HTMLSelectElement>, propertyId: number) => {
       
       const updateProperty = (propertyId: number, newValue: string) => { 
       
@@ -103,18 +138,45 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onCustomerAdded }) => {
         <label>Phone</label>&nbsp;
         <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} required />
       </div>
-      {properties && Object.entries(properties).length > 0 && <h3>Properties</h3>}
+      {properties && Object.entries(properties).length > 0}
           <div style={{ maxHeight: '50vh', overflowY: 'scroll' }}>
             {
               properties ? (
                 [...properties.entries()].map(([key, value]) => (
-                  <div key={key}>
-                    <label>{value.name}&nbsp;</label>
-                    <input
-                      type={getInputType(value.type)}
-                      value = {String(propertiesValues.get(String(value.id)))} 
-                      onChange={(e) => handlePropertyChange(e, Number(value.id))}
-                    />
+                  <div key={value.id}>
+                  {(() => {
+                      const property = value;//properties[key];
+                      if (!property) return null; 
+                      
+                      const inputType = getInputType(property.type);
+                      const currentValue = propertiesValues.get(String(property.id));
+
+                      console.log(`react returning key ${key}, name ${property.name}, inputType ${inputType}, property.id ${String(property.id)}, propertiesValues.get(String(property.id)) ${propertiesValues.get(String(property.id))}, getDefaultValue(property.type) ${getDefaultValue(property.type)}, currentValue ${currentValue}`);
+
+                      return (
+                        <>
+                          <label>{property.name}&nbsp;</label>
+                          {property.type === PropertyType.FIXED_LIST ? (
+                            <select
+                            value={currentValue as string}
+                              onChange={(e) => handlePropertyChange(e, property.id)}
+                            >
+                            {fixedValues.get(property.id.toString())?.map(item => (
+                              <option key={item.value} value={item.value}>
+                                {item.value}
+                              </option>
+                            ))}
+                            </select>
+                          ) : (
+                            <input
+                              type={inputType}
+                              value={currentValue as string | number} 
+                              onChange={(e) => handlePropertyChange(e, Number(value.id))}
+                            />
+                          )}
+                        </>
+                      );
+                    })()}
                   </div>
                 ))
               ) : (
