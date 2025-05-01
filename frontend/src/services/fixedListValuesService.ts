@@ -20,7 +20,6 @@ export const handleGetFixedValuesList = async (id: String): Promise<FixedValueIt
       return result;
   }
 
-  console.log(`fetching in handler ${id}`);
 
   const response = await fetch(baseUrl + `/admin/fixed-list-values/${id}`, {
     method: "GET",
@@ -36,10 +35,7 @@ export const handleGetFixedValuesList = async (id: String): Promise<FixedValueIt
   }
 
   var json = await response.json();
-  console.log(json);
   result= json as FixedValueItem[];
-  console.log('result');
-  console.log(result);
   return result;
 }
 
