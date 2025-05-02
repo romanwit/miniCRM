@@ -1,21 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { AlertColor } from '@mui/material';
 import { SnackBarComponent } from '../Common/SnackBarComponent';
-import { getToken } from '../../services/authService';
-import { baseUrl } from '../../services/constService';
 import { getAllProperties, getDefaultValue, getInputType } from '../../services/propertyTypesService';
 import FormCloseButton from '../Common/FormCloseButton';
 import { handleGetFixedValuesList } from '../../services/fixedListValuesService';
+import { NewCustomer, Property, PropertyType } from './Interfaces';
 
 interface AddCustomerProps {
   onCustomerAdded: (customer: NewCustomer, newProperties: Map<string, unknown>) => Promise<void>;
-}
-
-enum PropertyType {
-  STRING = "STRING",
-  DATE = "DATE",
-  NUMBER = "NUMBER",
-  FIXED_LIST = "FIXED_LIST"
 }
 
 const AddCustomer: React.FC<AddCustomerProps> = ({ onCustomerAdded }) => {
@@ -150,8 +142,6 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onCustomerAdded }) => {
                       
                       const inputType = getInputType(property.type);
                       const currentValue = propertiesValues.get(String(property.id));
-
-                      console.log(`react returning key ${key}, name ${property.name}, inputType ${inputType}, property.id ${String(property.id)}, propertiesValues.get(String(property.id)) ${propertiesValues.get(String(property.id))}, getDefaultValue(property.type) ${getDefaultValue(property.type)}, currentValue ${currentValue}`);
 
                       return (
                         <>

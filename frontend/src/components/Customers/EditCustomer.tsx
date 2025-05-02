@@ -7,16 +7,10 @@ import FormCloseButton from '../Common/FormCloseButton';
 import { SnackBarComponent } from '../Common/SnackBarComponent';
 import { AlertColor } from '@mui/material';
 import { handleGetFixedValuesList } from '../../services/fixedListValuesService';
+import { Customer, Property, PropertyType } from './Interfaces';
 
 interface EditCustomerProps {
   onCustomerUpdated: (customer: Customer) => void;
-}
-
-enum PropertyType {
-  STRING = "STRING",
-  DATE = "DATE",
-  NUMBER = "NUMBER",
-  FIXED_LIST = "FIXED_LIST"
 }
 
 const EditCustomer: React.FC<EditCustomerProps> = ({ onCustomerUpdated }) => {

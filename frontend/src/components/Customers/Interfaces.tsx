@@ -1,22 +1,22 @@
-enum PropertyType {
+export enum PropertyType {
   STRING = "STRING",
   DATE = "DATE",
   NUMBER = "NUMBER",
   FIXED_LIST = "FIXED_LIST"
 }
 
-interface Property {
+export interface Property {
   id: number;
   name: string;
   type: PropertyType;
 }
 
-interface NewProperty {
+export interface NewProperty {
   name: string;
   type: PropertyType;
 }
 
-interface Customer {
+export interface Customer {
   id: number;
   name: string;
   registrationDate: string;
@@ -25,7 +25,7 @@ interface Customer {
   properties: Map<string, unknown>;
 }
 
-interface NewCustomer {
+export interface NewCustomer {
   name: string;
   registrationDate: string;
   email: string;
