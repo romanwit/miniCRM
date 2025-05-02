@@ -48,21 +48,24 @@ task runAll {
     dependsOn ':frontend:buildFrontend'
 
     doLast {
-        def backendCommand = "gradle :backend:bootRun"
-        def frontendCommand = "npm run dev --prefix frontend"
+              
+        println "Starting backend..."
 
+        def backendCommand = "gradle :backend:bootRun"
         if (System.properties['os.name'].toLowerCase().contains('windows')) {
             backendCommand = "cmd /c gradlew.bat :backend:bootRun"
-            frontendCommand = "cmd /c npm run dev --prefix frontend"
         }
 
-        println "Running backend command: ${backendCommand}"
-        println "Running frontend command: ${frontendCommand}"
-
-        def backendProcess = backendCommand.execute();//null, new File(projectDir))
-        def frontendProcess = frontendCommand.execute();//null, new File(projectDir))
-
+        def backendProcess = backendCommand.execute(null, rootDir)
         backendProcess.consumeProcessOutput(System.out, System.err)
+
+        println "Running frontend by Gradle task startFrontend..."
+        def frontendCommand = "gradle :frontend:startFrontend"
+        if (System.properties['os.name'].toLowerCase().contains('windows')) {
+            frontendCommand = "cmd /c gradlew.bat :frontend:startFrontend"
+        }
+
+        def frontendProcess = frontendCommand.execute(null, rootDir)
         frontendProcess.consumeProcessOutput(System.out, System.err)
 
         backendProcess.waitFor()
